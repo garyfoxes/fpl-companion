@@ -12,7 +12,7 @@ const players = [
     totalPoints: 210,
     form: '8.2',
     status: 'a',
-    selectedByPercent: '55.1'
+    selectedByPercent: '55.1',
   },
   {
     id: 2,
@@ -25,13 +25,13 @@ const players = [
     totalPoints: 180,
     form: '7.2',
     status: 'a',
-    selectedByPercent: '38.1'
-  }
+    selectedByPercent: '38.1',
+  },
 ];
 
 const teams = [
   { id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: 'W', position: 1 },
-  { id: 2, name: 'Arsenal', shortName: 'ARS', strength: 4, form: 'W', position: 2 }
+  { id: 2, name: 'Arsenal', shortName: 'ARS', strength: 4, form: 'W', position: 2 },
 ];
 
 const fixtures = [
@@ -46,8 +46,8 @@ const fixtures = [
     finished: false,
     started: false,
     teamHDifficulty: 2,
-    teamADifficulty: 3
-  }
+    teamADifficulty: 3,
+  },
 ];
 
 const events = [
@@ -60,8 +60,8 @@ const events = [
     dataChecked: true,
     isCurrent: true,
     isNext: false,
-    isPrevious: false
-  }
+    isPrevious: false,
+  },
 ];
 
 function responseFor(operationName, variables) {
@@ -72,8 +72,8 @@ function responseFor(operationName, variables) {
           players,
           teams,
           fixtures,
-          events
-        }
+          events,
+        },
       };
     case 'Players':
       return {
@@ -84,22 +84,22 @@ function responseFor(operationName, variables) {
               return false;
             }
             return true;
-          })
-        }
+          }),
+        },
       };
     case 'Player':
       return {
         data: {
-          player: players.find((player) => player.id === variables.id) || null
-        }
+          player: players.find((player) => player.id === variables.id) || null,
+        },
       };
     case 'Teams':
       return { data: { teams } };
     case 'Team':
       return {
         data: {
-          team: teams.find((team) => team.id === variables.id) || null
-        }
+          team: teams.find((team) => team.id === variables.id) || null,
+        },
       };
     case 'Fixtures':
       return {
@@ -108,26 +108,30 @@ function responseFor(operationName, variables) {
             if (variables?.eventId && fixture.event !== variables.eventId) {
               return false;
             }
-            if (variables?.teamId && fixture.teamH !== variables.teamId && fixture.teamA !== variables.teamId) {
+            if (
+              variables?.teamId &&
+              fixture.teamH !== variables.teamId &&
+              fixture.teamA !== variables.teamId
+            ) {
               return false;
             }
             return true;
-          })
-        }
+          }),
+        },
       };
     case 'Fixture':
       return {
         data: {
-          fixture: fixtures.find((fixture) => fixture.id === variables.id) || null
-        }
+          fixture: fixtures.find((fixture) => fixture.id === variables.id) || null,
+        },
       };
     case 'Events':
       return { data: { events } };
     case 'Event':
       return {
         data: {
-          event: events.find((event) => event.id === variables.id) || null
-        }
+          event: events.find((event) => event.id === variables.id) || null,
+        },
       };
     default:
       return { data: {} };
@@ -141,7 +145,7 @@ test.beforeEach(async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   });
 });
@@ -178,7 +182,7 @@ test('api-down error state @smoke', async ({ page }) => {
     await route.fulfill({
       status: 503,
       contentType: 'application/json',
-      body: JSON.stringify({ errors: [{ message: 'upstream down' }] })
+      body: JSON.stringify({ errors: [{ message: 'upstream down' }] }),
     });
   });
 

@@ -13,5 +13,5 @@ class RedisCacheAdapter {
 }
 
 module.exports = {
-  RedisCacheAdapter
+  RedisCacheAdapter,
 };

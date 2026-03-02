@@ -11,15 +11,15 @@ export const apolloClient = new ApolloClient({
           players: {
             merge(_existing, incoming) {
               return incoming;
-            }
+            },
           },
           fixtures: {
             merge(_existing, incoming) {
               return incoming;
-            }
-          }
-        }
-      }
-    }
-  })
+            },
+          },
+        },
+      },
+    },
+  }),
 });

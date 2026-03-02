@@ -5,24 +5,37 @@ describe('resolvers', () => {
   const context = {
     dataSource: {
       listPlayers: jest.fn().mockResolvedValue([
-        { id: 1, webName: 'Haaland', firstName: 'Erling', lastName: 'Haaland', teamId: 1, position: 'FWD' }
+        {
+          id: 1,
+          webName: 'Haaland',
+          firstName: 'Erling',
+          lastName: 'Haaland',
+          teamId: 1,
+          position: 'FWD',
+        },
       ]),
       getPlayerById: jest.fn().mockResolvedValue({ id: 1, webName: 'Haaland' }),
       listTeams: jest.fn().mockResolvedValue([
         { id: 1, name: 'Man City', points: 70, strengthDefenceAway: 1280, shortName: 'MCI' },
         { id: 2, name: 'Arsenal', points: 68, strengthDefenceAway: 1210, shortName: 'ARS' },
-        { id: 3, name: 'Liverpool', points: 72, strengthDefenceAway: 1300, shortName: 'LIV' }
+        { id: 3, name: 'Liverpool', points: 72, strengthDefenceAway: 1300, shortName: 'LIV' },
       ]),
       getTeamById: jest.fn().mockResolvedValue({ id: 1, name: 'Man City' }),
-      listFixtures: jest.fn().mockResolvedValue([{ id: 1, event: 1, teamH: 1, teamA: 2, finished: false }]),
+      listFixtures: jest
+        .fn()
+        .mockResolvedValue([{ id: 1, event: 1, teamH: 1, teamA: 2, finished: false }]),
       getFixtureById: jest.fn().mockResolvedValue({ id: 1 }),
       listEvents: jest.fn().mockResolvedValue([{ id: 1, name: 'Gameweek 1' }]),
-      getEventById: jest.fn().mockResolvedValue({ id: 1, name: 'Gameweek 1' })
-    }
+      getEventById: jest.fn().mockResolvedValue({ id: 1, name: 'Gameweek 1' }),
+    },
   };
 
   it('resolves players query', async () => {
-    const result = await resolvers.Query.players(null, { search: 'haal', limit: 10, offset: 0 }, context);
+    const result = await resolvers.Query.players(
+      null,
+      { search: 'haal', limit: 10, offset: 0 },
+      context
+    );
     expect(result).toHaveLength(1);
   });
 
@@ -79,7 +92,7 @@ describe('resolvers', () => {
   it('resolves snake_case Team aliases', () => {
     const team = {
       shortName: 'MCI',
-      strengthDefenceAway: 1280
+      strengthDefenceAway: 1280,
     };
 
     expect(resolvers.Team.short_name(team)).toBe('MCI');
@@ -100,12 +113,16 @@ describe('resolvers', () => {
     const failingContext = {
       dataSource: {
         ...context.dataSource,
-        listPlayers: jest.fn().mockRejectedValue(new UpstreamUnavailableError('down', 503))
-      }
+        listPlayers: jest.fn().mockRejectedValue(new UpstreamUnavailableError('down', 503)),
+      },
     };
 
     await expect(
-      resolvers.Query.players(null, { search: null, teamId: null, position: null, limit: 10, offset: 0 }, failingContext)
+      resolvers.Query.players(
+        null,
+        { search: null, teamId: null, position: null, limit: 10, offset: 0 },
+        failingContext
+      )
     ).rejects.toMatchObject({ extensions: { code: 'UPSTREAM_UNAVAILABLE' } });
   });
 });

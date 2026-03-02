@@ -84,7 +84,13 @@ export const TEAM_QUERY = gql`
 
 export const FIXTURES_QUERY = gql`
   query Fixtures($eventId: Int, $teamId: Int, $finished: Boolean, $limit: Int!, $offset: Int!) {
-    fixtures(eventId: $eventId, teamId: $teamId, finished: $finished, limit: $limit, offset: $offset) {
+    fixtures(
+      eventId: $eventId
+      teamId: $teamId
+      finished: $finished
+      limit: $limit
+      offset: $offset
+    ) {
       id
       event
       kickoffTime

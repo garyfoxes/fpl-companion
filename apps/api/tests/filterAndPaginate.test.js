@@ -3,8 +3,15 @@ const { paginate } = require('../src/utils/paginate');
 
 describe('filterPlayers', () => {
   const players = [
-    { id: 1, firstName: 'Erling', lastName: 'Haaland', webName: 'Haaland', teamId: 1, position: 'FWD' },
-    { id: 2, firstName: 'Bukayo', lastName: 'Saka', webName: 'Saka', teamId: 2, position: 'MID' }
+    {
+      id: 1,
+      firstName: 'Erling',
+      lastName: 'Haaland',
+      webName: 'Haaland',
+      teamId: 1,
+      position: 'FWD',
+    },
+    { id: 2, firstName: 'Bukayo', lastName: 'Saka', webName: 'Saka', teamId: 2, position: 'MID' },
   ];
 
   it('filters by text search', () => {
@@ -21,7 +28,7 @@ describe('filterPlayers', () => {
 describe('filterFixtures', () => {
   const fixtures = [
     { id: 1, event: 1, teamH: 1, teamA: 2, finished: false },
-    { id: 2, event: 2, teamH: 3, teamA: 4, finished: true }
+    { id: 2, event: 2, teamH: 3, teamA: 4, finished: true },
   ];
 
   it('filters by event and finished state', () => {

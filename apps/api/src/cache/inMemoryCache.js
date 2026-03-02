@@ -8,7 +8,7 @@ class InMemoryCache {
     const ttlMs = Math.max(ttlSec, 1) * 1000;
     this.store.set(key, {
       value,
-      expiresAt: this.nowFn() + ttlMs
+      expiresAt: this.nowFn() + ttlMs,
     });
   }
 
@@ -25,11 +25,11 @@ class InMemoryCache {
 
     return {
       value: record.value,
-      isStale: isExpired
+      isStale: isExpired,
     };
   }
 }
 
 module.exports = {
-  InMemoryCache
+  InMemoryCache,
 };

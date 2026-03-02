@@ -2,7 +2,7 @@ const POSITION_MAP = {
   1: 'GKP',
   2: 'DEF',
   3: 'MID',
-  4: 'FWD'
+  4: 'FWD',
 };
 
 function asNumber(value) {
@@ -61,7 +61,7 @@ function mapPlayer(item) {
     selectedByPercent: asString(item.selected_by_percent ?? item.selectedByPercent),
     form: asString(item.form),
     totalPoints: asNumber(item.total_points ?? item.totalPoints),
-    status: asString(item.status) || 'unknown'
+    status: asString(item.status) || 'unknown',
   };
 }
 
@@ -91,7 +91,7 @@ function mapTeam(item) {
     strengthDefenceAway: asNumber(item.strength_defence_away ?? item.strengthDefenceAway),
     pulseId: asNumber(item.pulse_id ?? item.pulseId),
     form: asString(item.form),
-    position: asNumber(item.position)
+    position: asNumber(item.position),
   };
 }
 
@@ -112,7 +112,7 @@ function mapFixture(item) {
     finished: asBoolean(item.finished),
     started: asBoolean(item.started),
     teamHDifficulty: asNumber(item.team_h_difficulty ?? item.teamHDifficulty),
-    teamADifficulty: asNumber(item.team_a_difficulty ?? item.teamADifficulty)
+    teamADifficulty: asNumber(item.team_a_difficulty ?? item.teamADifficulty),
   };
 }
 
@@ -131,7 +131,7 @@ function mapEvent(item) {
     dataChecked: asBoolean(item.data_checked ?? item.dataChecked),
     isCurrent: asBoolean(item.is_current ?? item.isCurrent),
     isNext: asBoolean(item.is_next ?? item.isNext),
-    isPrevious: asBoolean(item.is_previous ?? item.isPrevious)
+    isPrevious: asBoolean(item.is_previous ?? item.isPrevious),
   };
 }
 
@@ -159,5 +159,5 @@ module.exports = {
   mapTeam,
   mapFixture,
   mapEvent,
-  mapArray
+  mapArray,
 };

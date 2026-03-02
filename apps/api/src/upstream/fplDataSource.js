@@ -3,7 +3,7 @@ const { RedisCacheAdapter } = require('../cache/redisCacheAdapter');
 const {
   UpstreamTimeoutError,
   UpstreamUnavailableError,
-  BadUpstreamResponseError
+  BadUpstreamResponseError,
 } = require('../errors/upstreamErrors');
 const { mapPlayer, mapTeam, mapFixture, mapEvent, mapArray } = require('./mappers');
 
@@ -16,10 +16,15 @@ function extractList(payload, key) {
     players: ['players', 'elements'],
     teams: ['teams'],
     fixtures: ['fixtures'],
-    events: ['events']
+    events: ['events'],
   }[key] || [key];
 
-  const candidates = [payload?.data, ...keyCandidates.map((candidateKey) => payload?.[candidateKey]), payload?.results, payload?.response];
+  const candidates = [
+    payload?.data,
+    ...keyCandidates.map((candidateKey) => payload?.[candidateKey]),
+    payload?.results,
+    payload?.response,
+  ];
   for (const candidate of candidates) {
     if (Array.isArray(candidate)) {
       return candidate;
@@ -59,17 +64,20 @@ class FplDataSource {
     const fallbackBaseUrls = Array.isArray(options.fallbackBaseUrls)
       ? options.fallbackBaseUrls
       : ['https://fantasy.premierleague.com'];
-    this.baseUrls = [this.baseUrl, ...fallbackBaseUrls].filter(Boolean).filter((value, index, values) => {
-      return values.indexOf(value) === index;
-    });
+    this.baseUrls = [this.baseUrl, ...fallbackBaseUrls]
+      .filter(Boolean)
+      .filter((value, index, values) => {
+        return values.indexOf(value) === index;
+      });
     this.timeoutMs = options.timeoutMs;
     this.fetchImpl = options.fetchImpl || fetch;
-    this.cache = options.cache || (options.redisUrl ? new RedisCacheAdapter() : new InMemoryCache());
+    this.cache =
+      options.cache || (options.redisUrl ? new RedisCacheAdapter() : new InMemoryCache());
     this.ttl = options.ttl;
     this.health = {
       lastSuccessAt: null,
       lastFailureAt: null,
-      lastError: null
+      lastError: null,
     };
   }
 
@@ -82,7 +90,7 @@ class FplDataSource {
         '/api/bootstrap-static/',
         '/api/bootstrap-static',
         '/bootstrap-static/',
-        '/bootstrap-static'
+        '/bootstrap-static',
       ],
       '/api/teams': [
         '/teams',
@@ -91,7 +99,7 @@ class FplDataSource {
         '/api/bootstrap-static/',
         '/api/bootstrap-static',
         '/bootstrap-static/',
-        '/bootstrap-static'
+        '/bootstrap-static',
       ],
       '/api/events': [
         '/events',
@@ -100,9 +108,9 @@ class FplDataSource {
         '/api/bootstrap-static/',
         '/api/bootstrap-static',
         '/bootstrap-static/',
-        '/bootstrap-static'
+        '/bootstrap-static',
       ],
-      '/api/fixtures': ['/fixtures', '/api/fixtures/', '/api/v1/fixtures', '/v1/fixtures']
+      '/api/fixtures': ['/fixtures', '/api/fixtures/', '/api/v1/fixtures', '/v1/fixtures'],
     };
 
     const candidates = [pathname];
@@ -126,7 +134,7 @@ class FplDataSource {
         for (const pathCandidate of pathCandidates) {
           requestTargets.push({
             baseUrl,
-            path: pathCandidate
+            path: pathCandidate,
           });
         }
       }
@@ -140,8 +148,8 @@ class FplDataSource {
           method: 'GET',
           signal: controller.signal,
           headers: {
-            Accept: 'application/json'
-          }
+            Accept: 'application/json',
+          },
         });
 
         const isLastCandidate = i === requestTargets.length - 1;
@@ -202,7 +210,9 @@ class FplDataSource {
         throw error;
       }
 
-      throw new UpstreamUnavailableError(`Failed upstream request for ${pathname}: ${error.message}`);
+      throw new UpstreamUnavailableError(
+        `Failed upstream request for ${pathname}: ${error.message}`
+      );
     } finally {
       clearTimeout(timeoutId);
     }
@@ -275,7 +285,7 @@ class FplDataSource {
       ttlSec: this.ttl.players,
       endpoint: '/api/players',
       mapper: mapPlayer,
-      payloadKey: 'players'
+      payloadKey: 'players',
     });
   }
 
@@ -285,7 +295,7 @@ class FplDataSource {
       ttlSec: this.ttl.players,
       endpoint: `/api/player/${id}`,
       mapper: mapPlayer,
-      payloadKey: 'player'
+      payloadKey: 'player',
     });
 
     if (player) {
@@ -302,7 +312,7 @@ class FplDataSource {
       ttlSec: this.ttl.teams,
       endpoint: '/api/teams',
       mapper: mapTeam,
-      payloadKey: 'teams'
+      payloadKey: 'teams',
     });
   }
 
@@ -312,7 +322,7 @@ class FplDataSource {
       ttlSec: this.ttl.teams,
       endpoint: `/api/team/${id}`,
       mapper: mapTeam,
-      payloadKey: 'team'
+      payloadKey: 'team',
     });
 
     if (team) {
@@ -329,7 +339,7 @@ class FplDataSource {
       ttlSec: this.ttl.fixtures,
       endpoint: '/api/fixtures',
       mapper: mapFixture,
-      payloadKey: 'fixtures'
+      payloadKey: 'fixtures',
     });
   }
 
@@ -339,7 +349,7 @@ class FplDataSource {
       ttlSec: this.ttl.fixtures,
       endpoint: `/api/fixture/${id}`,
       mapper: mapFixture,
-      payloadKey: 'fixture'
+      payloadKey: 'fixture',
     });
 
     if (fixture) {
@@ -356,7 +366,7 @@ class FplDataSource {
       ttlSec: this.ttl.events,
       endpoint: '/api/events',
       mapper: mapEvent,
-      payloadKey: 'events'
+      payloadKey: 'events',
     });
   }
 
@@ -366,7 +376,7 @@ class FplDataSource {
       ttlSec: this.ttl.events,
       endpoint: `/api/event/${id}`,
       mapper: mapEvent,
-      payloadKey: 'event'
+      payloadKey: 'event',
     });
 
     if (event) {
@@ -385,7 +395,7 @@ class FplDataSource {
         upstreamReachable: true,
         lastSuccessAt: this.health.lastSuccessAt,
         lastFailureAt: this.health.lastFailureAt,
-        lastError: this.health.lastError
+        lastError: this.health.lastError,
       };
     } catch {
       return {
@@ -393,12 +403,12 @@ class FplDataSource {
         upstreamReachable: false,
         lastSuccessAt: this.health.lastSuccessAt,
         lastFailureAt: this.health.lastFailureAt,
-        lastError: this.health.lastError
+        lastError: this.health.lastError,
       };
     }
   }
 }
 
 module.exports = {
-  FplDataSource
+  FplDataSource,
 };

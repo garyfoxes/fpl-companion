@@ -2,12 +2,24 @@ const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type Query {
-    players(search: String, teamId: Int, position: String, limit: Int = 50, offset: Int = 0): [Player!]!
+    players(
+      search: String
+      teamId: Int
+      position: String
+      limit: Int = 50
+      offset: Int = 0
+    ): [Player!]!
     player(id: Int!): Player
     teams(orderBy: TeamOrderBy, first: Int, limit: Int = 50, offset: Int = 0): [Team!]!
     teamsConnection(orderBy: TeamOrderBy, first: Int = 50, offset: Int = 0): TeamConnection!
     team(id: Int!): Team
-    fixtures(eventId: Int, teamId: Int, finished: Boolean, limit: Int = 50, offset: Int = 0): [Fixture!]!
+    fixtures(
+      eventId: Int
+      teamId: Int
+      finished: Boolean
+      limit: Int = 50
+      offset: Int = 0
+    ): [Fixture!]!
     fixture(id: Int!): Fixture
     events: [Event!]!
     event(id: Int!): Event
@@ -121,5 +133,5 @@ const typeDefs = gql`
 `;
 
 module.exports = {
-  typeDefs
+  typeDefs,
 };

@@ -14,7 +14,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
@@ -38,15 +38,15 @@ export function PlayersPage() {
       teamId,
       position: position || null,
       limit: 200,
-      offset: 0
-    }
+      offset: 0,
+    },
   });
 
   const teamsQuery = useQuery(TEAMS_QUERY);
 
   const detailQuery = useQuery(PLAYER_QUERY, {
     variables: { id: selectedId || -1 },
-    skip: !selectedId
+    skip: !selectedId,
   });
 
   const players = data?.players || [];
@@ -159,7 +159,7 @@ export function PlayersPage() {
             { label: 'Last Name', value: detailQuery.data.player.lastName },
             { label: 'Status', value: detailQuery.data.player.status },
             { label: 'Selected By %', value: detailQuery.data.player.selectedByPercent },
-            { label: 'Price', value: detailQuery.data.player.nowCost }
+            { label: 'Price', value: detailQuery.data.player.nowCost },
           ]}
         />
       ) : null}

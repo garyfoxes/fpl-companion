@@ -13,8 +13,8 @@ export function DetailPanel({ title, rows }) {
             gap: 1,
             gridTemplateColumns: {
               xs: '1fr',
-              sm: 'repeat(2, minmax(0, 1fr))'
-            }
+              sm: 'repeat(2, minmax(0, 1fr))',
+            },
           }}
         >
           {rows.map((row) => (

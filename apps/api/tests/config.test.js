@@ -21,7 +21,7 @@ describe('getConfig', () => {
       CACHE_TTL_PLAYERS_SEC: '100',
       CACHE_TTL_TEAMS_SEC: '200',
       CACHE_TTL_FIXTURES_SEC: '300',
-      CACHE_TTL_EVENTS_SEC: '400'
+      CACHE_TTL_EVENTS_SEC: '400',
     });
 
     expect(config.port).toBe(5001);
@@ -35,7 +35,7 @@ describe('getConfig', () => {
 
   it('normalizes README docs url to upstream root host', () => {
     const config = getConfig({
-      UPSTREAM_FPL_BASE_URL: 'https://fpl-api-tau.vercel.app/README'
+      UPSTREAM_FPL_BASE_URL: 'https://fpl-api-tau.vercel.app/README',
     });
 
     expect(config.upstreamBaseUrl).toBe('https://fpl-api-tau.vercel.app');

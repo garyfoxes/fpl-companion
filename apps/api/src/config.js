@@ -5,7 +5,7 @@ const DEFAULTS = {
   ttlPlayersSec: 300,
   ttlTeamsSec: 900,
   ttlFixturesSec: 120,
-  ttlEventsSec: 900
+  ttlEventsSec: 900,
 };
 
 function parseIntOrDefault(value, fallback) {
@@ -43,10 +43,10 @@ function getConfig(env = process.env) {
     ttlPlayersSec: parseIntOrDefault(env.CACHE_TTL_PLAYERS_SEC, DEFAULTS.ttlPlayersSec),
     ttlTeamsSec: parseIntOrDefault(env.CACHE_TTL_TEAMS_SEC, DEFAULTS.ttlTeamsSec),
     ttlFixturesSec: parseIntOrDefault(env.CACHE_TTL_FIXTURES_SEC, DEFAULTS.ttlFixturesSec),
-    ttlEventsSec: parseIntOrDefault(env.CACHE_TTL_EVENTS_SEC, DEFAULTS.ttlEventsSec)
+    ttlEventsSec: parseIntOrDefault(env.CACHE_TTL_EVENTS_SEC, DEFAULTS.ttlEventsSec),
   };
 }
 
 module.exports = {
-  getConfig
+  getConfig,
 };

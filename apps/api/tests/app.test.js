@@ -4,15 +4,37 @@ const { createApp } = require('../src/app');
 describe('createApp', () => {
   let apolloServer;
   const mockedDataSource = {
-    listPlayers: jest.fn().mockResolvedValue([{ id: 1, firstName: 'Erling', lastName: 'Haaland', webName: 'Haaland' }]),
-    getPlayerById: jest.fn().mockResolvedValue({ id: 1, firstName: 'Erling', lastName: 'Haaland', webName: 'Haaland' }),
+    listPlayers: jest
+      .fn()
+      .mockResolvedValue([{ id: 1, firstName: 'Erling', lastName: 'Haaland', webName: 'Haaland' }]),
+    getPlayerById: jest
+      .fn()
+      .mockResolvedValue({ id: 1, firstName: 'Erling', lastName: 'Haaland', webName: 'Haaland' }),
     listTeams: jest.fn().mockResolvedValue([{ id: 1, name: 'Man City' }]),
     getTeamById: jest.fn().mockResolvedValue({ id: 1, name: 'Man City' }),
     listFixtures: jest.fn().mockResolvedValue([{ id: 1, event: 1, finished: false }]),
     getFixtureById: jest.fn().mockResolvedValue({ id: 1, event: 1, finished: false }),
-    listEvents: jest.fn().mockResolvedValue([{ id: 1, name: 'Gameweek 1', finished: false, dataChecked: false, isCurrent: true, isNext: false, isPrevious: false }]),
-    getEventById: jest.fn().mockResolvedValue({ id: 1, name: 'Gameweek 1', finished: false, dataChecked: false, isCurrent: true, isNext: false, isPrevious: false }),
-    readiness: jest.fn().mockResolvedValue({ status: 'ok', upstreamReachable: true })
+    listEvents: jest.fn().mockResolvedValue([
+      {
+        id: 1,
+        name: 'Gameweek 1',
+        finished: false,
+        dataChecked: false,
+        isCurrent: true,
+        isNext: false,
+        isPrevious: false,
+      },
+    ]),
+    getEventById: jest.fn().mockResolvedValue({
+      id: 1,
+      name: 'Gameweek 1',
+      finished: false,
+      dataChecked: false,
+      isCurrent: true,
+      isNext: false,
+      isPrevious: false,
+    }),
+    readiness: jest.fn().mockResolvedValue({ status: 'ok', upstreamReachable: true }),
   };
 
   afterEach(async () => {
@@ -32,8 +54,8 @@ describe('createApp', () => {
         ttlPlayersSec: 10,
         ttlTeamsSec: 10,
         ttlFixturesSec: 10,
-        ttlEventsSec: 10
-      }
+        ttlEventsSec: 10,
+      },
     });
     const { app } = setup;
     apolloServer = setup.apolloServer;
@@ -56,8 +78,8 @@ describe('createApp', () => {
         ttlPlayersSec: 10,
         ttlTeamsSec: 10,
         ttlFixturesSec: 10,
-        ttlEventsSec: 10
-      }
+        ttlEventsSec: 10,
+      },
     });
     const { app } = setup;
     apolloServer = setup.apolloServer;
@@ -66,12 +88,18 @@ describe('createApp', () => {
       .post('/graphql')
       .send({ query: '{ players(limit: 10, offset: 0) { id webName } }' });
 
-    const teamsResponse = await request(app).post('/graphql').send({ query: '{ teams { id name } }' });
+    const teamsResponse = await request(app)
+      .post('/graphql')
+      .send({ query: '{ teams { id name } }' });
     const teamsConnectionResponse = await request(app)
       .post('/graphql')
       .send({ query: '{ teamsConnection(first: 1) { total items { id name } } }' });
-    const fixturesResponse = await request(app).post('/graphql').send({ query: '{ fixtures { id event } }' });
-    const eventsResponse = await request(app).post('/graphql').send({ query: '{ events { id name } }' });
+    const fixturesResponse = await request(app)
+      .post('/graphql')
+      .send({ query: '{ fixtures { id event } }' });
+    const eventsResponse = await request(app)
+      .post('/graphql')
+      .send({ query: '{ events { id name } }' });
 
     expect(playersResponse.statusCode).toBe(200);
     expect(playersResponse.body.data.players[0].id).toBe(1);

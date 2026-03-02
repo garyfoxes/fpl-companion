@@ -14,7 +14,8 @@
     "test:e2e:smoke": "npm run test:e2e:smoke --workspace apps/web",
     "hooks:install": "git config core.hooksPath .githooks",
     "format": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "check:yaml": "node scripts/check-yaml.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

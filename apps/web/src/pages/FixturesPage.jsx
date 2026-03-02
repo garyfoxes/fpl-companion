@@ -13,7 +13,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
@@ -35,8 +35,8 @@ export function FixturesPage() {
       teamId,
       finished,
       limit: 300,
-      offset: 0
-    }
+      offset: 0,
+    },
   });
 
   const teamsQuery = useQuery(TEAMS_QUERY);
@@ -44,7 +44,7 @@ export function FixturesPage() {
 
   const detailQuery = useQuery(FIXTURE_QUERY, {
     variables: { id: selectedId || -1 },
-    skip: !selectedId
+    skip: !selectedId,
   });
 
   function updateFilter(key, value) {
@@ -147,7 +147,11 @@ export function FixturesPage() {
                   key={fixture.id}
                   hover
                   selected={fixture.id === selectedId}
-                  onClick={() => setSearchParams(setParam(searchParams, 'selected', fixture.id), { replace: true })}
+                  onClick={() =>
+                    setSearchParams(setParam(searchParams, 'selected', fixture.id), {
+                      replace: true,
+                    })
+                  }
                   sx={{ cursor: 'pointer' }}
                 >
                   <TableCell>{fixture.id}</TableCell>
@@ -171,7 +175,7 @@ export function FixturesPage() {
             { label: 'Away Score', value: detailQuery.data.fixture.teamAScore },
             { label: 'Home Difficulty', value: detailQuery.data.fixture.teamHDifficulty },
             { label: 'Away Difficulty', value: detailQuery.data.fixture.teamADifficulty },
-            { label: 'Started', value: String(detailQuery.data.fixture.started) }
+            { label: 'Started', value: String(detailQuery.data.fixture.started) },
           ]}
         />
       ) : null}

@@ -6,7 +6,7 @@ import {
   Stack,
   Toolbar,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
@@ -16,7 +16,7 @@ const navItems = [
   { to: '/players', label: 'Players' },
   { to: '/teams', label: 'Teams' },
   { to: '/fixtures', label: 'Fixtures' },
-  { to: '/events', label: 'Gameweeks' }
+  { to: '/events', label: 'Gameweeks' },
 ];
 
 export function AppLayout({ children }) {
@@ -25,9 +25,16 @@ export function AppLayout({ children }) {
   const isCompact = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box sx={{ minHeight: '100vh', background: 'linear-gradient(180deg, #f8fbff 0%, #f2f5f9 100%)' }}>
+    <Box
+      sx={{ minHeight: '100vh', background: 'linear-gradient(180deg, #f8fbff 0%, #f2f5f9 100%)' }}
+    >
       <AppBar position="static" color="inherit" elevation={1}>
-        <Toolbar sx={{ flexDirection: isCompact ? 'column' : 'row', alignItems: isCompact ? 'flex-start' : 'center' }}>
+        <Toolbar
+          sx={{
+            flexDirection: isCompact ? 'column' : 'row',
+            alignItems: isCompact ? 'flex-start' : 'center',
+          }}
+        >
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700, py: 1 }}>
             FPL Companion
           </Typography>

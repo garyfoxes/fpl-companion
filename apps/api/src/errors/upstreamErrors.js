@@ -32,5 +32,5 @@ module.exports = {
   UpstreamError,
   UpstreamTimeoutError,
   UpstreamUnavailableError,
-  BadUpstreamResponseError
+  BadUpstreamResponseError,
 };
