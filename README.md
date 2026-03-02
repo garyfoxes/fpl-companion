@@ -52,17 +52,58 @@ sequenceDiagram
 
     U->>W: Open /players with filters
     W->>A: Query players(search, teamId, position)
-    A->>C: Check cached players
-    alt cache hit
-      C-->>A: Cached payload
-    else cache miss
+    A->>C: cache.get(key) — fresh?
+    alt fresh cache hit
+      C-->>A: { value, isStale: false }
+      A-->>W: Return cached data immediately
+    else cache miss or expired
+      A->>C: cache.get(key, allowStale) — keep stale copy as fallback
+      C-->>A: stale copy (or null)
       A->>F: GET /api/players
-      F-->>A: JSON response
-      A->>C: Store normalized payload with TTL
+      alt upstream succeeds
+        F-->>A: JSON response
+        A->>A: Normalize via mapper
+        A->>C: cache.set(key, data, ttlSec)
+        A-->>W: Return fresh data
+      else upstream fails & stale exists
+        A-->>W: Return stale data (graceful degradation)
+      else upstream fails & no stale
+        A-->>W: Throw UPSTREAM error
+      end
     end
-    A-->>W: GraphQL response
     W-->>U: Render table + detail view
 ```
+
+## In-Memory Cache
+
+The API uses a lightweight in-memory TTL cache (`InMemoryCache`) backed by a JavaScript `Map`. Each entry stores the data alongside an expiration timestamp.
+
+### How it works
+
+| Operation | Behaviour |
+|-----------|-----------|
+| `set(key, value, ttlSec)` | Stores `{ value, expiresAt: now + ttl }`. TTL is floored at 1 second. |
+| `get(key)` | Returns `{ value, isStale: false }` if the entry exists **and** has not expired. Returns `null` otherwise (cache miss). |
+| `get(key, { allowStale: true })` | Same as above, but also returns **expired** entries as `{ value, isStale: true }` instead of `null`. |
+
+### Stale-fallback pattern
+
+The datasource (`FplDataSource`) reads the cache in a two-pass pattern:
+
+```text
+1.  cache.get(key)                     → Fresh hit? Return immediately — no network call.
+2.  cache.get(key, { allowStale })     → Hold the stale copy aside (may be null).
+3.  Fetch from upstream FPL API.
+4a. Upstream succeeds                  → Normalize, cache.set(), return fresh data.
+4b. Upstream fails + stale exists      → Return stale data (graceful degradation).
+4c. Upstream fails + no stale          → Throw error (UPSTREAM_UNAVAILABLE / UPSTREAM_TIMEOUT).
+```
+
+This ensures users keep seeing data even when the upstream API is temporarily down — the cache serves expired entries as a safety net until the upstream recovers. Per-resource TTLs (e.g. 5 min for players, 2 min for fixtures) are configured via environment variables.
+
+### Why not Redis?
+
+A `RedisCacheAdapter` stub exists for future use, but the MVP uses the in-memory cache to avoid external dependencies. The cache interface (`set`/`get`) is identical, so swapping to Redis requires only a config change.
 
 ## Getting Started
 
