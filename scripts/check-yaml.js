@@ -5,7 +5,7 @@
  *   1. Standalone .yml / .yaml files
  *   2. YAML frontmatter (between --- delimiters) in .md files
  *
- * Uses js-yaml (already a transitive dependency) — no new packages required.
+ * Uses js-yaml (declared as a devDependency).
  * Exit code 0 = all valid, 1 = at least one error found.
  */
 
