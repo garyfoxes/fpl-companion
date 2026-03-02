@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-echo "Running pre-push checks: lint + unit tests"
+echo "Running pre-push checks: yaml + lint + unit tests"
+npm run check:yaml
 npm run lint
 npm run test

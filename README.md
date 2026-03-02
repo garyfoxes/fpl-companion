@@ -96,6 +96,7 @@ npm run hooks:install
 
 This installs a repository `pre-push` hook that runs:
 
+- `npm run check:yaml`
 - `npm run lint`
 - `npm run test`
 
@@ -125,6 +126,7 @@ At repo root:
 
 ```bash
 npm run dev
+npm run check:yaml      # validate YAML files and frontmatter
 npm run format          # check formatting (Prettier)
 npm run format:write    # auto-fix formatting
 npm run lint

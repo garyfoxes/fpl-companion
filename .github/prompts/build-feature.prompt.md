@@ -1,7 +1,7 @@
 ---
 description: Triage → Implement → Review using AGENTS.md guardrails and repo scripts.
 agent: 'agent'
-tools: ['agent', 'read', 'search', 'edit', 'read/terminalLastCommand','search/usages'
+tools: ['agent', 'read', 'search', 'edit', 'read/terminalLastCommand', 'search/usages']
 ---
 
 Task:
@@ -32,6 +32,6 @@ FINAL RESPONSE MUST INCLUDE:
 
 - Summary of changes
 - Files changed
-- Test evidence (the three commands + results)
+- Test evidence (all required commands + results + results)
 - Any remaining risks/assumptions
 - PR notes aligned to .github/pull_request_template.md (screenshots if UI-impacting, rollback notes)

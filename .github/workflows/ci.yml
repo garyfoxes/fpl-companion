@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate YAML
+        run: npm run check:yaml
+
       - name: Format check
         run: npm run format
 
