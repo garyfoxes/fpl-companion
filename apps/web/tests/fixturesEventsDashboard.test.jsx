@@ -1,0 +1,187 @@
+import { screen } from '@testing-library/react';
+import { DashboardPage } from '../src/pages/DashboardPage';
+import { EventsPage } from '../src/pages/EventsPage';
+import { FixturesPage } from '../src/pages/FixturesPage';
+import {
+  DASHBOARD_QUERY,
+  EVENT_QUERY,
+  EVENTS_QUERY,
+  FIXTURE_QUERY,
+  FIXTURES_QUERY,
+  TEAMS_QUERY
+} from '../src/lib/queries';
+import { renderWithProviders } from './testUtils';
+
+describe('DashboardPage', () => {
+  it('renders summary stats', async () => {
+    const mocks = [
+      {
+        request: { query: DASHBOARD_QUERY },
+        result: {
+          data: {
+            players: [{ id: 1 }],
+            teams: [{ id: 1, name: 'Man City' }],
+            fixtures: [{ id: 1 }],
+            events: [
+              { id: 1, name: 'Gameweek 1', isCurrent: true, isNext: false },
+              { id: 2, name: 'Gameweek 2', isCurrent: false, isNext: true }
+            ]
+          }
+        }
+      }
+    ];
+
+    renderWithProviders(<DashboardPage />, { mocks });
+
+    expect(await screen.findByText('Current gameweek status')).toBeInTheDocument();
+    expect(screen.getByText('Current: Gameweek 1')).toBeInTheDocument();
+    expect(screen.getByText('Next: Gameweek 2')).toBeInTheDocument();
+  });
+});
+
+describe('FixturesPage', () => {
+  it('renders fixture list and detail panel', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FIXTURES_QUERY,
+          variables: { eventId: null, teamId: null, finished: null, limit: 300, offset: 0 }
+        },
+        result: {
+          data: {
+            fixtures: [
+              {
+                id: 1,
+                event: 1,
+                kickoffTime: '2026-08-12T15:00:00Z',
+                teamH: 1,
+                teamA: 2,
+                teamHScore: null,
+                teamAScore: null,
+                finished: false,
+                started: false,
+                teamHDifficulty: 2,
+                teamADifficulty: 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        request: {
+          query: TEAMS_QUERY
+        },
+        result: {
+          data: {
+            teams: [{ id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: null, position: 1 }]
+          }
+        }
+      },
+      {
+        request: {
+          query: EVENTS_QUERY
+        },
+        result: {
+          data: {
+            events: [
+              {
+                id: 1,
+                name: 'Gameweek 1',
+                deadlineTime: null,
+                averageEntryScore: null,
+                finished: false,
+                dataChecked: true,
+                isCurrent: true,
+                isNext: false,
+                isPrevious: false
+              }
+            ]
+          }
+        }
+      },
+      {
+        request: {
+          query: FIXTURE_QUERY,
+          variables: { id: 1 }
+        },
+        result: {
+          data: {
+            fixture: {
+              id: 1,
+              event: 1,
+              kickoffTime: '2026-08-12T15:00:00Z',
+              teamH: 1,
+              teamA: 2,
+              teamHScore: null,
+              teamAScore: null,
+              finished: false,
+              started: false,
+              teamHDifficulty: 2,
+              teamADifficulty: 3
+            }
+          }
+        }
+      }
+    ];
+
+    renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures?selected=1' });
+
+    expect(await screen.findByText('Fixture details: #1')).toBeInTheDocument();
+    expect(screen.getByText('2026-08-12T15:00:00Z')).toBeInTheDocument();
+  });
+});
+
+describe('EventsPage', () => {
+  it('renders event list and selected detail', async () => {
+    const mocks = [
+      {
+        request: {
+          query: EVENTS_QUERY
+        },
+        result: {
+          data: {
+            events: [
+              {
+                id: 1,
+                name: 'Gameweek 1',
+                deadlineTime: '2026-08-10T17:30:00Z',
+                averageEntryScore: 55,
+                finished: false,
+                dataChecked: true,
+                isCurrent: true,
+                isNext: false,
+                isPrevious: false
+              }
+            ]
+          }
+        }
+      },
+      {
+        request: {
+          query: EVENT_QUERY,
+          variables: { id: 1 }
+        },
+        result: {
+          data: {
+            event: {
+              id: 1,
+              name: 'Gameweek 1',
+              deadlineTime: '2026-08-10T17:30:00Z',
+              averageEntryScore: 55,
+              finished: false,
+              dataChecked: true,
+              isCurrent: true,
+              isNext: false,
+              isPrevious: false
+            }
+          }
+        }
+      }
+    ];
+
+    renderWithProviders(<EventsPage />, { mocks, route: '/events?selected=1' });
+
+    expect(await screen.findByText('Gameweek details: Gameweek 1')).toBeInTheDocument();
+    expect(screen.getAllByText('2026-08-10T17:30:00Z').length).toBeGreaterThan(0);
+  });
+});

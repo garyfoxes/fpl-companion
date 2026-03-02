@@ -1,0 +1,28 @@
+{
+  "name": "fpl-companion",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace apps/api\" \"npm run dev --workspace apps/web\"",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e:smoke": "npm run test:e2e:smoke --workspace apps/web",
+    "hooks:install": "git config core.hooksPath .githooks",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

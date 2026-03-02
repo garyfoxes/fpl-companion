@@ -1,0 +1,8 @@
+node_modules
+coverage
+playwright-report
+test-results
+apps/web/dist
+apps/api/.env
+.DS_Store
+npm-debug.log*

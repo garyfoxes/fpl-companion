@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      UPSTREAM_FPL_BASE_URL: https://fpl-api-tau.vercel.app
+      UPSTREAM_TIMEOUT_MS: 8000
+      CACHE_TTL_PLAYERS_SEC: 300
+      CACHE_TTL_TEAMS_SEC: 900
+      CACHE_TTL_FIXTURES_SEC: 120
+      CACHE_TTL_EVENTS_SEC: 900
+    ports:
+      - '4000:4000'
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      VITE_GRAPHQL_URL: http://localhost:4000/graphql
+    ports:
+      - '4173:4173'
+    depends_on:
+      - api
