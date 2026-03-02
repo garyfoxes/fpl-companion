@@ -32,6 +32,6 @@ FINAL RESPONSE MUST INCLUDE:
 
 - Summary of changes
 - Files changed
-- Test evidence (all required commands + results + results)
+- Test evidence (all required commands + results)
 - Any remaining risks/assumptions
 - PR notes aligned to .github/pull_request_template.md (screenshots if UI-impacting, rollback notes)
