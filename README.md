@@ -57,7 +57,7 @@ sequenceDiagram
       C-->>A: { value, isStale: false }
       A-->>W: Return cached data immediately
     else cache miss or expired
-      A->>C: cache.get(key, allowStale) — keep stale copy as fallback
+      A->>C: cache.get(key, { allowStale: true }) — keep stale copy as fallback
       C-->>A: stale copy (or null)
       A->>F: GET /api/players
       alt upstream succeeds
