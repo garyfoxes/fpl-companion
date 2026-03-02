@@ -80,11 +80,11 @@ The API uses a lightweight in-memory TTL cache (`InMemoryCache`) backed by a Jav
 
 ### How it works
 
-| Operation | Behaviour |
-|-----------|-----------|
-| `set(key, value, ttlSec)` | Stores `{ value, expiresAt: now + ttl }`. TTL is floored at 1 second. |
-| `get(key)` | Returns `{ value, isStale: false }` if the entry exists **and** has not expired. Returns `null` otherwise (cache miss). |
-| `get(key, { allowStale: true })` | Same as above, but also returns **expired** entries as `{ value, isStale: true }` instead of `null`. |
+| Operation                        | Behaviour                                                                                                               |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `set(key, value, ttlSec)`        | Stores `{ value, expiresAt: now + ttl }`. TTL is floored at 1 second.                                                   |
+| `get(key)`                       | Returns `{ value, isStale: false }` if the entry exists **and** has not expired. Returns `null` otherwise (cache miss). |
+| `get(key, { allowStale: true })` | Same as above, but also returns **expired** entries as `{ value, isStale: true }` instead of `null`.                    |
 
 ### Stale-fallback pattern
 
