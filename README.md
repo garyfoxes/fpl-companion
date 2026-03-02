@@ -3,12 +3,14 @@
 FPL Companion is a user-friendly Fantasy Premier League data browser built as a JavaScript monorepo.
 
 It provides a GraphQL BFF API and a React frontend for viewing:
+
 - Players
 - Teams
 - Fixtures
 - Events / Gameweeks
 
 ## Tech Stack
+
 - Frontend: React, Vite, Material UI, Apollo Client
 - API: Node.js, Express, Apollo Server GraphQL
 - Testing: Jest (unit/integration), Playwright (smoke E2E)
@@ -65,6 +67,7 @@ sequenceDiagram
 ## Getting Started
 
 ### 1) Prerequisites
+
 - Node.js 18.18+ (Node 20 recommended)
 - npm 9+
 
@@ -92,6 +95,7 @@ npm run hooks:install
 ```
 
 This installs a repository `pre-push` hook that runs:
+
 - `npm run lint`
 - `npm run test`
 
@@ -99,20 +103,20 @@ This installs a repository `pre-push` hook that runs:
 
 API variables (`apps/api/.env`):
 
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `4000` | API server port |
-| `UPSTREAM_FPL_BASE_URL` | `https://fpl-api-tau.vercel.app` | Upstream FPL API base URL (use host root, not `/README`) |
-| `UPSTREAM_TIMEOUT_MS` | `8000` | Upstream request timeout |
-| `CACHE_TTL_PLAYERS_SEC` | `300` | Player cache TTL |
-| `CACHE_TTL_TEAMS_SEC` | `900` | Team cache TTL |
-| `CACHE_TTL_FIXTURES_SEC` | `120` | Fixture cache TTL |
-| `CACHE_TTL_EVENTS_SEC` | `900` | Event cache TTL |
+| Variable                 | Default                          | Description                                              |
+| ------------------------ | -------------------------------- | -------------------------------------------------------- |
+| `PORT`                   | `4000`                           | API server port                                          |
+| `UPSTREAM_FPL_BASE_URL`  | `https://fpl-api-tau.vercel.app` | Upstream FPL API base URL (use host root, not `/README`) |
+| `UPSTREAM_TIMEOUT_MS`    | `8000`                           | Upstream request timeout                                 |
+| `CACHE_TTL_PLAYERS_SEC`  | `300`                            | Player cache TTL                                         |
+| `CACHE_TTL_TEAMS_SEC`    | `900`                            | Team cache TTL                                           |
+| `CACHE_TTL_FIXTURES_SEC` | `120`                            | Fixture cache TTL                                        |
+| `CACHE_TTL_EVENTS_SEC`   | `900`                            | Event cache TTL                                          |
 
 Web variables (`apps/web/.env`):
 
-| Variable | Default | Description |
-|---|---|---|
+| Variable           | Default                         | Description                       |
+| ------------------ | ------------------------------- | --------------------------------- |
 | `VITE_GRAPHQL_URL` | `http://localhost:4000/graphql` | GraphQL endpoint used by frontend |
 
 ## Scripts
@@ -121,6 +125,8 @@ At repo root:
 
 ```bash
 npm run dev
+npm run format          # check formatting (Prettier)
+npm run format:write    # auto-fix formatting
 npm run lint
 npm run test
 npm run test:e2e:smoke
@@ -140,6 +146,7 @@ docker compose up --build
 ## GraphQL Query Surface
 
 `Query` supports:
+
 - `players(search, teamId, position, limit, offset)`
 - `player(id)`
 - `teams(orderBy, first, limit, offset)`
@@ -151,24 +158,30 @@ docker compose up --build
 - `event(id)`
 
 ## Testing Strategy
+
 - API: resolver, datasource, mapper, cache, config tests.
 - Web: component and route tests with mocked GraphQL.
 - E2E: smoke scenarios for list/detail/filter and API-down error handling.
-- CI enforces lint, test, build, and smoke E2E checks.
+- CI enforces format, lint, test, build, and smoke E2E checks.
+- CI uses `npm ci` for reproducible installs and caches Playwright browsers.
 
 ## Troubleshooting
 
 ### Upstream API unavailable
+
 Symptoms:
+
 - `UPSTREAM_UNAVAILABLE` or `UPSTREAM_TIMEOUT` GraphQL errors.
 - `/readyz` returns `503` with `status: degraded`.
 
 What to do:
+
 1. Confirm upstream URL and connectivity.
 2. Increase `UPSTREAM_TIMEOUT_MS` for unstable networks.
 3. Use cached responses while upstream recovers (already enabled by stale fallback).
 
 ### Empty or partial data
+
 1. Verify upstream payload shape has required fields.
 2. Check API logs for dropped invalid records.
 3. Validate filters in URL query params.

@@ -4,7 +4,7 @@ describe('sortTeams', () => {
   const teams = [
     { id: 1, name: 'Man City', points: 70, strengthDefenceAway: 1280 },
     { id: 2, name: 'Arsenal', points: 68, strengthDefenceAway: 1210 },
-    { id: 3, name: 'Liverpool', points: 72, strengthDefenceAway: 1300 }
+    { id: 3, name: 'Liverpool', points: 72, strengthDefenceAway: 1300 },
   ];
 
   it('sorts by numeric field ASC', () => {

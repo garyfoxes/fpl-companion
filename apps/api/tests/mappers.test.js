@@ -13,7 +13,7 @@ describe('mappers', () => {
       selected_by_percent: '45.3',
       form: '7.5',
       total_points: 200,
-      status: 'a'
+      status: 'a',
     });
 
     expect(mapped.id).toBe(10);
@@ -29,7 +29,7 @@ describe('mappers', () => {
         short_name: 'ARS',
         points: 67,
         strength_defence_away: 1210,
-        pulse_id: 3
+        pulse_id: 3,
       })
     ).toMatchObject({
       id: 2,
@@ -37,10 +37,16 @@ describe('mappers', () => {
       shortName: 'ARS',
       points: 67,
       strengthDefenceAway: 1210,
-      pulseId: 3
+      pulseId: 3,
     });
-    expect(mapFixture({ id: 3, event: 5, team_h: 1, team_a: 2, finished: false })).toMatchObject({ id: 3, event: 5 });
-    expect(mapEvent({ id: 7, name: 'Gameweek 7', is_current: true })).toMatchObject({ id: 7, isCurrent: true });
+    expect(mapFixture({ id: 3, event: 5, team_h: 1, team_a: 2, finished: false })).toMatchObject({
+      id: 3,
+      event: 5,
+    });
+    expect(mapEvent({ id: 7, name: 'Gameweek 7', is_current: true })).toMatchObject({
+      id: 7,
+      isCurrent: true,
+    });
   });
 
   it('returns null for invalid required fields', () => {

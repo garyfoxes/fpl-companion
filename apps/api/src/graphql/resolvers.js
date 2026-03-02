@@ -12,13 +12,13 @@ const TEAM_ALIAS_FIELDS = {
   strength_attack_away: 'strengthAttackAway',
   strength_defence_home: 'strengthDefenceHome',
   strength_defence_away: 'strengthDefenceAway',
-  pulse_id: 'pulseId'
+  pulse_id: 'pulseId',
 };
 
 function getTeamWindow(args = {}) {
   return {
     limit: args.first ?? args.limit,
-    offset: args.offset
+    offset: args.offset,
   };
 }
 
@@ -27,15 +27,15 @@ function toGraphQLError(error) {
     return new GraphQLError(error.message, {
       extensions: {
         code: error.code,
-        upstreamStatus: error.statusCode
-      }
+        upstreamStatus: error.statusCode,
+      },
     });
   }
 
   return new GraphQLError('Unexpected internal error', {
     extensions: {
-      code: 'INTERNAL_SERVER_ERROR'
-    }
+      code: 'INTERNAL_SERVER_ERROR',
+    },
   });
 }
 
@@ -77,7 +77,7 @@ const resolvers = {
         const window = getTeamWindow(args);
         return {
           items: paginate(ordered, window.limit, window.offset),
-          total: ordered.length
+          total: ordered.length,
         };
       } catch (error) {
         throw toGraphQLError(error);
@@ -124,17 +124,17 @@ const resolvers = {
       } catch (error) {
         throw toGraphQLError(error);
       }
-    }
+    },
   },
   Team: Object.fromEntries(
     Object.entries(TEAM_ALIAS_FIELDS).map(([fieldName, sourceField]) => [
       fieldName,
-      (team) => team[sourceField] ?? null
+      (team) => team[sourceField] ?? null,
     ])
-  )
+  ),
 };
 
 module.exports = {
   resolvers,
-  toGraphQLError
+  toGraphQLError,
 };

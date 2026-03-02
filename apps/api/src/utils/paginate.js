@@ -10,5 +10,5 @@ function paginate(items, limit, offset) {
 }
 
 module.exports = {
-  paginate
+  paginate,
 };

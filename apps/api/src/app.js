@@ -17,18 +17,18 @@ async function createApp(options = {}) {
         players: config.ttlPlayersSec,
         teams: config.ttlTeamsSec,
         fixtures: config.ttlFixturesSec,
-        events: config.ttlEventsSec
+        events: config.ttlEventsSec,
       },
       cache: options.cache,
-      fetchImpl: options.fetchImpl
+      fetchImpl: options.fetchImpl,
     });
 
   const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
     context: () => ({
-      dataSource
-    })
+      dataSource,
+    }),
   });
 
   await apolloServer.start();
@@ -40,7 +40,7 @@ async function createApp(options = {}) {
   app.get('/healthz', (_req, res) => {
     res.status(200).json({
       status: 'ok',
-      service: 'fpl-companion-api'
+      service: 'fpl-companion-api',
     });
   });
 
@@ -52,17 +52,17 @@ async function createApp(options = {}) {
 
   apolloServer.applyMiddleware({
     app,
-    path: '/graphql'
+    path: '/graphql',
   });
 
   return {
     app,
     apolloServer,
     dataSource,
-    config
+    config,
   };
 }
 
 module.exports = {
-  createApp
+  createApp,
 };

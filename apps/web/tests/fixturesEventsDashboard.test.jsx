@@ -8,7 +8,7 @@ import {
   EVENTS_QUERY,
   FIXTURE_QUERY,
   FIXTURES_QUERY,
-  TEAMS_QUERY
+  TEAMS_QUERY,
 } from '../src/lib/queries';
 import { renderWithProviders } from './testUtils';
 
@@ -24,11 +24,11 @@ describe('DashboardPage', () => {
             fixtures: [{ id: 1 }],
             events: [
               { id: 1, name: 'Gameweek 1', isCurrent: true, isNext: false },
-              { id: 2, name: 'Gameweek 2', isCurrent: false, isNext: true }
-            ]
-          }
-        }
-      }
+              { id: 2, name: 'Gameweek 2', isCurrent: false, isNext: true },
+            ],
+          },
+        },
+      },
     ];
 
     renderWithProviders(<DashboardPage />, { mocks });
@@ -45,7 +45,7 @@ describe('FixturesPage', () => {
       {
         request: {
           query: FIXTURES_QUERY,
-          variables: { eventId: null, teamId: null, finished: null, limit: 300, offset: 0 }
+          variables: { eventId: null, teamId: null, finished: null, limit: 300, offset: 0 },
         },
         result: {
           data: {
@@ -61,25 +61,27 @@ describe('FixturesPage', () => {
                 finished: false,
                 started: false,
                 teamHDifficulty: 2,
-                teamADifficulty: 3
-              }
-            ]
-          }
-        }
+                teamADifficulty: 3,
+              },
+            ],
+          },
+        },
       },
       {
         request: {
-          query: TEAMS_QUERY
+          query: TEAMS_QUERY,
         },
         result: {
           data: {
-            teams: [{ id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: null, position: 1 }]
-          }
-        }
+            teams: [
+              { id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: null, position: 1 },
+            ],
+          },
+        },
       },
       {
         request: {
-          query: EVENTS_QUERY
+          query: EVENTS_QUERY,
         },
         result: {
           data: {
@@ -93,16 +95,16 @@ describe('FixturesPage', () => {
                 dataChecked: true,
                 isCurrent: true,
                 isNext: false,
-                isPrevious: false
-              }
-            ]
-          }
-        }
+                isPrevious: false,
+              },
+            ],
+          },
+        },
       },
       {
         request: {
           query: FIXTURE_QUERY,
-          variables: { id: 1 }
+          variables: { id: 1 },
         },
         result: {
           data: {
@@ -117,11 +119,11 @@ describe('FixturesPage', () => {
               finished: false,
               started: false,
               teamHDifficulty: 2,
-              teamADifficulty: 3
-            }
-          }
-        }
-      }
+              teamADifficulty: 3,
+            },
+          },
+        },
+      },
     ];
 
     renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures?selected=1' });
@@ -136,7 +138,7 @@ describe('EventsPage', () => {
     const mocks = [
       {
         request: {
-          query: EVENTS_QUERY
+          query: EVENTS_QUERY,
         },
         result: {
           data: {
@@ -150,16 +152,16 @@ describe('EventsPage', () => {
                 dataChecked: true,
                 isCurrent: true,
                 isNext: false,
-                isPrevious: false
-              }
-            ]
-          }
-        }
+                isPrevious: false,
+              },
+            ],
+          },
+        },
       },
       {
         request: {
           query: EVENT_QUERY,
-          variables: { id: 1 }
+          variables: { id: 1 },
         },
         result: {
           data: {
@@ -172,11 +174,11 @@ describe('EventsPage', () => {
               dataChecked: true,
               isCurrent: true,
               isNext: false,
-              isPrevious: false
-            }
-          }
-        }
-      }
+              isPrevious: false,
+            },
+          },
+        },
+      },
     ];
 
     renderWithProviders(<EventsPage />, { mocks, route: '/events?selected=1' });

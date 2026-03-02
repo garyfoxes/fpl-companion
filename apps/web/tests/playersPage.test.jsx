@@ -8,18 +8,18 @@ describe('PlayersPage', () => {
     const mocks = [
       {
         request: {
-          query: TEAMS_QUERY
+          query: TEAMS_QUERY,
         },
         result: {
           data: {
-            teams: [{ id: 1, name: 'Man City', shortName: 'MCI' }]
-          }
-        }
+            teams: [{ id: 1, name: 'Man City', shortName: 'MCI' }],
+          },
+        },
       },
       {
         request: {
           query: PLAYERS_QUERY,
-          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 }
+          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
         },
         result: {
           data: {
@@ -34,16 +34,16 @@ describe('PlayersPage', () => {
                 nowCost: 14,
                 totalPoints: 200,
                 form: '8.1',
-                status: 'a'
-              }
-            ]
-          }
-        }
+                status: 'a',
+              },
+            ],
+          },
+        },
       },
       {
         request: {
           query: PLAYER_QUERY,
-          variables: { id: 1 }
+          variables: { id: 1 },
         },
         result: {
           data: {
@@ -58,11 +58,11 @@ describe('PlayersPage', () => {
               totalPoints: 200,
               form: '8.1',
               status: 'a',
-              selectedByPercent: '55.0'
-            }
-          }
-        }
-      }
+              selectedByPercent: '55.0',
+            },
+          },
+        },
+      },
     ];
 
     renderWithProviders(<PlayersPage />, { mocks, route: '/players?selected=1' });
@@ -76,25 +76,25 @@ describe('PlayersPage', () => {
     const mocks = [
       {
         request: {
-          query: TEAMS_QUERY
+          query: TEAMS_QUERY,
         },
         result: {
           data: {
-            teams: []
-          }
-        }
+            teams: [],
+          },
+        },
       },
       {
         request: {
           query: PLAYERS_QUERY,
-          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 }
+          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
         },
         result: {
           data: {
-            players: []
-          }
-        }
-      }
+            players: [],
+          },
+        },
+      },
     ];
 
     renderWithProviders(<PlayersPage />, { mocks, route: '/players' });

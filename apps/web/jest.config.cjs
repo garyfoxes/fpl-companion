@@ -4,7 +4,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/setupTests.js'],
   moduleFileExtensions: ['js', 'jsx'],
   transform: {
-    '^.+\\.(js|jsx)$': 'babel-jest'
+    '^.+\\.(js|jsx)$': 'babel-jest',
   },
   collectCoverage: true,
   collectCoverageFrom: ['src/components/**/*.{js,jsx}', 'src/utils/**/*.{js,jsx}'],
@@ -13,7 +13,7 @@ module.exports = {
       statements: 80,
       branches: 70,
       functions: 80,
-      lines: 80
-    }
-  }
+      lines: 80,
+    },
+  },
 };

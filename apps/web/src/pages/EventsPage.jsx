@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Card
+  Card,
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
@@ -23,7 +23,7 @@ export function EventsPage() {
   const { data, loading, error } = useQuery(EVENTS_QUERY);
   const detailQuery = useQuery(EVENT_QUERY, {
     variables: { id: selectedId || -1 },
-    skip: !selectedId
+    skip: !selectedId,
   });
 
   const events = data?.events || [];
@@ -58,7 +58,9 @@ export function EventsPage() {
                   key={event.id}
                   hover
                   selected={event.id === selectedId}
-                  onClick={() => setSearchParams(setParam(searchParams, 'selected', event.id), { replace: true })}
+                  onClick={() =>
+                    setSearchParams(setParam(searchParams, 'selected', event.id), { replace: true })
+                  }
                   sx={{ cursor: 'pointer' }}
                 >
                   <TableCell>{event.id}</TableCell>
@@ -81,7 +83,7 @@ export function EventsPage() {
             { label: 'Average Entry Score', value: detailQuery.data.event.averageEntryScore },
             { label: 'Deadline', value: detailQuery.data.event.deadlineTime },
             { label: 'Data Checked', value: String(detailQuery.data.event.dataChecked) },
-            { label: 'Previous', value: String(detailQuery.data.event.isPrevious) }
+            { label: 'Previous', value: String(detailQuery.data.event.isPrevious) },
           ]}
         />
       ) : null}

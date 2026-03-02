@@ -16,7 +16,7 @@ const TEAM_ORDER_FIELD_TO_KEY = {
   strength_attack_away: 'strengthAttackAway',
   strength_defence_home: 'strengthDefenceHome',
   strength_defence_away: 'strengthDefenceAway',
-  pulse_id: 'pulseId'
+  pulse_id: 'pulseId',
 };
 
 function compareValues(a, b, direction) {
@@ -56,5 +56,5 @@ function sortTeams(teams, orderBy) {
 }
 
 module.exports = {
-  sortTeams
+  sortTeams,
 };

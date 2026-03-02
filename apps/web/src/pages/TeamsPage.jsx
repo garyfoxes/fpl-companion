@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
@@ -26,7 +26,7 @@ export function TeamsPage() {
   const { data, loading, error } = useQuery(TEAMS_QUERY);
   const detailQuery = useQuery(TEAM_QUERY, {
     variables: { id: selectedId || -1 },
-    skip: !selectedId
+    skip: !selectedId,
   });
 
   const teams = (data?.teams || []).filter((team) =>
@@ -102,7 +102,7 @@ export function TeamsPage() {
             { label: 'Short Name', value: detailQuery.data.team.shortName },
             { label: 'Strength', value: detailQuery.data.team.strength },
             { label: 'Form', value: detailQuery.data.team.form },
-            { label: 'Position', value: detailQuery.data.team.position }
+            { label: 'Position', value: detailQuery.data.team.position },
           ]}
         />
       ) : null}

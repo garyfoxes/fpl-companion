@@ -53,5 +53,5 @@ function filterFixtures(fixtures, args) {
 
 module.exports = {
   filterPlayers,
-  filterFixtures
+  filterFixtures,
 };

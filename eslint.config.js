@@ -5,12 +5,12 @@ module.exports = [
   {
     files: ['**/*.{js,jsx}'],
     plugins: {
-      react: reactPlugin
+      react: reactPlugin,
     },
     settings: {
       react: {
-        version: 'detect'
-      }
+        version: 'detect',
+      },
     },
     languageOptions: {
       ecmaVersion: 2023,
@@ -26,13 +26,13 @@ module.exports = [
         document: 'readonly',
         navigator: 'readonly',
         URLSearchParams: 'readonly',
-        AbortController: 'readonly'
+        AbortController: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
-          jsx: true
-        }
-      }
+          jsx: true,
+        },
+      },
     },
     rules: {
       'react/jsx-uses-vars': 'error',
@@ -41,11 +41,11 @@ module.exports = [
         'error',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_'
-        }
+          varsIgnorePattern: '^_',
+        },
       ],
       eqeqeq: ['error', 'always'],
-      'no-console': ['warn', { allow: ['warn', 'error', 'log'] }]
-    }
-  }
+      'no-console': ['warn', { allow: ['warn', 'error', 'log'] }],
+    },
+  },
 ];

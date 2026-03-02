@@ -3,14 +3,14 @@ const { InMemoryCache } = require('../src/cache/inMemoryCache');
 const {
   BadUpstreamResponseError,
   UpstreamTimeoutError,
-  UpstreamUnavailableError
+  UpstreamUnavailableError,
 } = require('../src/errors/upstreamErrors');
 
 function createMockResponse(payload, ok = true, status = 200) {
   return {
     ok,
     status,
-    json: jest.fn().mockResolvedValue(payload)
+    json: jest.fn().mockResolvedValue(payload),
   };
 }
 
@@ -18,7 +18,7 @@ function createInvalidJsonResponse(status = 200) {
   return {
     ok: true,
     status,
-    json: jest.fn().mockRejectedValue(new Error('Unexpected token < in JSON'))
+    json: jest.fn().mockRejectedValue(new Error('Unexpected token < in JSON')),
   };
 }
 
@@ -29,7 +29,7 @@ function createDataSource(fetchImpl, cache = new InMemoryCache(), options = {}) 
     ttl: { players: 60, teams: 60, fixtures: 60, events: 60 },
     fetchImpl,
     cache,
-    fallbackBaseUrls: options.fallbackBaseUrls || []
+    fallbackBaseUrls: options.fallbackBaseUrls || [],
   });
 }
 
@@ -37,7 +37,15 @@ describe('FplDataSource', () => {
   it('maps list players from upstream and caches results', async () => {
     const fetchImpl = jest.fn().mockResolvedValue(
       createMockResponse({
-        players: [{ id: 1, first_name: 'Erling', second_name: 'Haaland', web_name: 'Haaland', element_type: 4 }]
+        players: [
+          {
+            id: 1,
+            first_name: 'Erling',
+            second_name: 'Haaland',
+            web_name: 'Haaland',
+            element_type: 4,
+          },
+        ],
       })
     );
 
@@ -54,28 +62,34 @@ describe('FplDataSource', () => {
   it('maps teams, fixtures, and events list endpoints', async () => {
     const fetchImpl = jest.fn((url) => {
       if (url.endsWith('/api/teams')) {
-        return Promise.resolve(createMockResponse({ teams: [{ id: 1, name: 'Arsenal', short_name: 'ARS' }] }));
+        return Promise.resolve(
+          createMockResponse({ teams: [{ id: 1, name: 'Arsenal', short_name: 'ARS' }] })
+        );
       }
 
       if (url.endsWith('/api/fixtures')) {
         return Promise.resolve(
-          createMockResponse({ fixtures: [{ id: 99, event: 5, team_h: 1, team_a: 2, finished: false }] })
+          createMockResponse({
+            fixtures: [{ id: 99, event: 5, team_h: 1, team_a: 2, finished: false }],
+          })
         );
       }
 
-      return Promise.resolve(createMockResponse({ events: [{ id: 10, name: 'Gameweek 10', is_current: true }] }));
+      return Promise.resolve(
+        createMockResponse({ events: [{ id: 10, name: 'Gameweek 10', is_current: true }] })
+      );
     });
 
     const dataSource = createDataSource(fetchImpl);
 
     await expect(dataSource.listTeams()).resolves.toEqual([
-      expect.objectContaining({ id: 1, name: 'Arsenal', shortName: 'ARS' })
+      expect.objectContaining({ id: 1, name: 'Arsenal', shortName: 'ARS' }),
     ]);
     await expect(dataSource.listFixtures()).resolves.toEqual([
-      expect.objectContaining({ id: 99, event: 5, teamH: 1, teamA: 2 })
+      expect.objectContaining({ id: 99, event: 5, teamH: 1, teamA: 2 }),
     ]);
     await expect(dataSource.listEvents()).resolves.toEqual([
-      expect.objectContaining({ id: 10, name: 'Gameweek 10', isCurrent: true })
+      expect.objectContaining({ id: 10, name: 'Gameweek 10', isCurrent: true }),
     ]);
   });
 
@@ -86,17 +100,33 @@ describe('FplDataSource', () => {
       }
       if (url.endsWith('/api/players')) {
         return Promise.resolve(
-          createMockResponse({ players: [{ id: 1, first_name: 'Bukayo', second_name: 'Saka', web_name: 'Saka', element_type: 3 }] })
+          createMockResponse({
+            players: [
+              {
+                id: 1,
+                first_name: 'Bukayo',
+                second_name: 'Saka',
+                web_name: 'Saka',
+                element_type: 3,
+              },
+            ],
+          })
         );
       }
       if (url.endsWith('/api/team/2')) {
-        return Promise.resolve(createMockResponse({ team: { id: 2, name: 'Man City', short_name: 'MCI' } }));
+        return Promise.resolve(
+          createMockResponse({ team: { id: 2, name: 'Man City', short_name: 'MCI' } })
+        );
       }
       if (url.endsWith('/api/fixture/3')) {
-        return Promise.resolve(createMockResponse({ fixture: { id: 3, event: 1, team_h: 1, team_a: 2, finished: true } }));
+        return Promise.resolve(
+          createMockResponse({ fixture: { id: 3, event: 1, team_h: 1, team_a: 2, finished: true } })
+        );
       }
 
-      return Promise.resolve(createMockResponse({ event: { id: 4, name: 'Gameweek 4', is_next: true } }));
+      return Promise.resolve(
+        createMockResponse({ event: { id: 4, name: 'Gameweek 4', is_next: true } })
+      );
     });
 
     const dataSource = createDataSource(fetchImpl);
@@ -130,8 +160,8 @@ describe('FplDataSource', () => {
           dataChecked: false,
           isCurrent: false,
           isNext: false,
-          isPrevious: false
-        }
+          isPrevious: false,
+        },
       ],
       1
     );
@@ -167,7 +197,9 @@ describe('FplDataSource', () => {
   });
 
   it('returns readiness status for healthy and degraded states', async () => {
-    const okFetch = jest.fn().mockResolvedValue(createMockResponse({ events: [{ id: 1, name: 'GW1' }] }));
+    const okFetch = jest
+      .fn()
+      .mockResolvedValue(createMockResponse({ events: [{ id: 1, name: 'GW1' }] }));
     const okDataSource = createDataSource(okFetch);
 
     const okReadiness = await okDataSource.readiness();
@@ -191,7 +223,15 @@ describe('FplDataSource', () => {
       if (url.endsWith('/players')) {
         return Promise.resolve(
           createMockResponse({
-            players: [{ id: 7, first_name: 'Son', second_name: 'Heung-min', web_name: 'Son', element_type: 3 }]
+            players: [
+              {
+                id: 7,
+                first_name: 'Son',
+                second_name: 'Heung-min',
+                web_name: 'Son',
+                element_type: 3,
+              },
+            ],
           })
         );
       }
@@ -227,7 +267,15 @@ describe('FplDataSource', () => {
       if (url.endsWith('/api/bootstrap-static/')) {
         return Promise.resolve(
           createMockResponse({
-            elements: [{ id: 9, first_name: 'Darwin', second_name: 'Nunez', web_name: 'Nunez', element_type: 4 }]
+            elements: [
+              {
+                id: 9,
+                first_name: 'Darwin',
+                second_name: 'Nunez',
+                web_name: 'Nunez',
+                element_type: 4,
+              },
+            ],
           })
         );
       }
@@ -238,7 +286,9 @@ describe('FplDataSource', () => {
     const dataSource = createDataSource(fetchImpl);
     const players = await dataSource.listPlayers();
 
-    expect(players).toEqual([expect.objectContaining({ id: 9, webName: 'Nunez', position: 'FWD' })]);
+    expect(players).toEqual([
+      expect.objectContaining({ id: 9, webName: 'Nunez', position: 'FWD' }),
+    ]);
     expect(fetchImpl).toHaveBeenCalledWith(
       'https://example.test/api/bootstrap-static/',
       expect.objectContaining({ method: 'GET' })
@@ -254,7 +304,7 @@ describe('FplDataSource', () => {
       if (url === 'https://fantasy.premierleague.com/api/fixtures/') {
         return Promise.resolve(
           createMockResponse({
-            fixtures: [{ id: 11, event: 2, team_h: 1, team_a: 3, finished: false }]
+            fixtures: [{ id: 11, event: 2, team_h: 1, team_a: 3, finished: false }],
           })
         );
       }
@@ -263,7 +313,7 @@ describe('FplDataSource', () => {
     });
 
     const dataSource = createDataSource(fetchImpl, new InMemoryCache(), {
-      fallbackBaseUrls: ['https://fantasy.premierleague.com']
+      fallbackBaseUrls: ['https://fantasy.premierleague.com'],
     });
     const fixtures = await dataSource.listFixtures();
 
@@ -289,7 +339,9 @@ describe('FplDataSource', () => {
       }
 
       if (url.endsWith('/api/bootstrap-static/')) {
-        return Promise.resolve(createMockResponse({ teams: [{ id: 1, name: 'Arsenal', short_name: 'ARS' }] }));
+        return Promise.resolve(
+          createMockResponse({ teams: [{ id: 1, name: 'Arsenal', short_name: 'ARS' }] })
+        );
       }
 
       return Promise.resolve(createMockResponse({}, false, 404));
