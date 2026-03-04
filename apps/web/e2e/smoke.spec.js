@@ -168,6 +168,10 @@ test('fixtures filter by gameweek @smoke', async ({ page }) => {
   await page.getByLabel('Gameweek').click();
   await page.getByRole('option', { name: 'Gameweek 1' }).click();
   await expect(page.getByText('2026-08-12T15:00:00Z')).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Home' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Away' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'MCI' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'ARS' })).toBeVisible();
 });
 
 test('events render and detail view @smoke', async ({ page }) => {

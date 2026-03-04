@@ -1,7 +1,7 @@
 ---
 name: implementer
 description: Implement change + tests + run checks (npm workspaces aware)
-tools: ['read', 'search', 'search/usages', 'edit', 'read/terminalLastCommand']
+tools: ['read', 'search', 'search/usages', 'edit', 'read/terminalLastCommand', 'execute']
 handoffs:
   - label: Hand off to Reviewer
     agent: reviewer
@@ -16,6 +16,17 @@ ALWAYS read these first:
 - AGENTS.md
 - root package.json
 - .github/workflows/ci.yml (to match CI expectations)
+
+Branch policy (MUST follow before any edits):
+
+1. Check the current branch with `git branch --show-current`.
+2. If on `main`, create and switch to a new branch BEFORE making any changes:
+   - feature work → `feature/<short-description>`
+   - bug fix → `bug/<short-description>`
+   - chore/maintenance → `chore/<short-description>`
+     Use kebab-case, e.g. `feature/fixtures-team-names`.
+3. If already on a `feature/`, `bug/`, or `chore/` branch, stay on it.
+4. NEVER commit directly to `main`.
 
 Non-negotiable guardrails (from AGENTS.md):
 

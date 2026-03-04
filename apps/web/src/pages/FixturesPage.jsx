@@ -57,6 +57,12 @@ export function FixturesPage() {
   const combinedLoading = fixturesQuery.loading || teamsQuery.loading || eventsQuery.loading;
   const fixtures = fixturesQuery.data?.fixtures || [];
 
+  const teamMap = Object.fromEntries((teamsQuery.data?.teams || []).map((t) => [t.id, t]));
+
+  function teamLabel(id) {
+    return teamMap[id]?.shortName || teamMap[id]?.name || String(id ?? 'N/A');
+  }
+
   return (
     <Stack spacing={2}>
       <Typography variant="h4" sx={{ fontWeight: 700 }}>
@@ -135,8 +141,8 @@ export function FixturesPage() {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Gameweek</TableCell>
-                <TableCell>Home Team ID</TableCell>
-                <TableCell>Away Team ID</TableCell>
+                <TableCell>Home</TableCell>
+                <TableCell>Away</TableCell>
                 <TableCell>Kickoff</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
@@ -156,8 +162,8 @@ export function FixturesPage() {
                 >
                   <TableCell>{fixture.id}</TableCell>
                   <TableCell>{fixture.event ?? 'N/A'}</TableCell>
-                  <TableCell>{fixture.teamH ?? 'N/A'}</TableCell>
-                  <TableCell>{fixture.teamA ?? 'N/A'}</TableCell>
+                  <TableCell>{teamLabel(fixture.teamH)}</TableCell>
+                  <TableCell>{teamLabel(fixture.teamA)}</TableCell>
                   <TableCell>{fixture.kickoffTime || 'TBC'}</TableCell>
                   <TableCell>{fixture.finished ? 'Finished' : 'Not finished'}</TableCell>
                 </TableRow>
