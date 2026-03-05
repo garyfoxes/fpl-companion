@@ -2,7 +2,6 @@
 name: triage
 description: Analyze request, locate touch points, risks, and propose a plan + tests
 model: Claude Sonnet 4.6
-argument-hint: The inputs this agent expects, e.g., "a task to implement" or "a question to answer".
 tools: ['read', 'search', 'search/usages']
 handoffs:
   - label: Hand off to Implementer

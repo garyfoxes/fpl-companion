@@ -1,6 +1,7 @@
 ---
 description: Triage → Implement → Review using AGENTS.md guardrails and repo scripts.
 agent: 'agent'
+model: Claude Sonnet 4.6
 tools: ['agent', 'read', 'search', 'edit', 'read/terminalLastCommand', 'search/usages']
 ---
 
