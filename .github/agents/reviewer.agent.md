@@ -1,6 +1,7 @@
 ---
 name: reviewer
 description: Review changes (correctness, GraphQL/API safety, tests, style)
+model: Claude Sonnet 4.6
 tools: ['read', 'search', 'search/usages']
 handoffs:
   - label: Ask Implementer to address issues

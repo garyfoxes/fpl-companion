@@ -1,6 +1,7 @@
 ---
 name: implementer
 description: Implement change + tests + run checks (npm workspaces aware)
+model: Claude Opus 4.6
 tools: ['read', 'search', 'search/usages', 'edit', 'read/terminalLastCommand', 'execute']
 handoffs:
   - label: Hand off to Reviewer
