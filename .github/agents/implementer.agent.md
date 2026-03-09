@@ -49,8 +49,11 @@ Implementation behavior:
    - Update schema + resolvers
    - Update client operations in apps/web
    - Ensure error codes + partial data behavior remain compliant
-4. Add tests as part of the change (no “TODO tests”).
-
+4. Add tests as part of the change (no "TODO tests").
+5. Update docs where relevant (AGENTS.md guardrail: "Keep docs current when scripts, env vars, or architecture change"):
+   - README.md: new/changed npm scripts, env vars, architecture diagrams, or Getting Started steps
+   - AGENTS.md: new conventions, guardrails, or frontend/API patterns agents must follow
+   - Only update docs that are directly affected; do not rewrite unrelated sections.
 Testing expectations (must comply with AGENTS.md):
 
 - Validate (in this order unless blocked):

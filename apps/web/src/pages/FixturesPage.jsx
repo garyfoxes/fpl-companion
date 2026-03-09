@@ -19,6 +19,7 @@ import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
 import { PageState } from '../components/PageState';
 import { EVENTS_QUERY, FIXTURE_QUERY, FIXTURES_QUERY, TEAMS_QUERY } from '../lib/queries';
+import { formatDate } from '../utils/formatDate';
 import { readBooleanParam, readIntParam, setParam } from '../utils/urlState';
 
 export function FixturesPage() {
@@ -143,6 +144,7 @@ export function FixturesPage() {
                 <TableCell>Gameweek</TableCell>
                 <TableCell>Home</TableCell>
                 <TableCell>Away</TableCell>
+                <TableCell>Score</TableCell>
                 <TableCell>Kickoff</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
@@ -164,7 +166,13 @@ export function FixturesPage() {
                   <TableCell>{fixture.event ?? 'N/A'}</TableCell>
                   <TableCell>{teamLabel(fixture.teamH)}</TableCell>
                   <TableCell>{teamLabel(fixture.teamA)}</TableCell>
-                  <TableCell>{fixture.kickoffTime || 'TBC'}</TableCell>
+                  <TableCell>
+                    {fixture.finished &&
+                    (fixture.teamHScore !== null || fixture.teamAScore !== null)
+                      ? `${fixture.teamHScore ?? '?'} – ${fixture.teamAScore ?? '?'}`
+                      : '–'}
+                  </TableCell>
+                  <TableCell>{formatDate(fixture.kickoffTime)}</TableCell>
                   <TableCell>{fixture.finished ? 'Finished' : 'Not finished'}</TableCell>
                 </TableRow>
               ))}

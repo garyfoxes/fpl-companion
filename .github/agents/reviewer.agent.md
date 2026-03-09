@@ -47,6 +47,11 @@ Review checklist (repo-specific):
      - npm run test
      - npm run test:e2e:smoke
 
+6. Documentation currency (per AGENTS.md guardrail)
+   - README.md updated if scripts, env vars, architecture, or Getting Started steps changed
+   - AGENTS.md updated if new conventions, guardrails, or patterns were introduced
+   - Flag missing doc updates as a Med finding
+
 Output:
 
 1. Verdict: Approve / Approve-with-notes / Request-changes

@@ -130,7 +130,9 @@ describe('FixturesPage', () => {
     renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures?selected=1' });
 
     expect(await screen.findByText('Fixture details: #1')).toBeInTheDocument();
-    expect(screen.getByText('2026-08-12T15:00:00Z')).toBeInTheDocument();
+    expect(screen.getByText(/Aug/)).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Score' })).toBeInTheDocument();
+    expect(screen.getByText('–')).toBeInTheDocument();
     expect(screen.getByText('MCI')).toBeInTheDocument();
     expect(screen.getByText('ARS')).toBeInTheDocument();
   });
@@ -193,6 +195,71 @@ describe('FixturesPage', () => {
     expect(await screen.findByText('99')).toBeInTheDocument();
     expect(screen.getByText('N/A')).toBeInTheDocument();
   });
+
+  it('shows final score for a finished fixture', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FIXTURES_QUERY,
+          variables: { eventId: null, teamId: null, finished: null, limit: 300, offset: 0 },
+        },
+        result: {
+          data: {
+            fixtures: [
+              {
+                id: 5,
+                event: 1,
+                kickoffTime: '2026-08-12T15:00:00Z',
+                teamH: 1,
+                teamA: 2,
+                teamHScore: 2,
+                teamAScore: 1,
+                finished: true,
+                started: true,
+                teamHDifficulty: 2,
+                teamADifficulty: 3,
+              },
+            ],
+          },
+        },
+      },
+      {
+        request: { query: TEAMS_QUERY },
+        result: {
+          data: {
+            teams: [
+              { id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: null, position: 1 },
+              { id: 2, name: 'Arsenal', shortName: 'ARS', strength: 4, form: null, position: 2 },
+            ],
+          },
+        },
+      },
+      {
+        request: { query: EVENTS_QUERY },
+        result: {
+          data: {
+            events: [
+              {
+                id: 1,
+                name: 'Gameweek 1',
+                deadlineTime: null,
+                averageEntryScore: null,
+                finished: false,
+                dataChecked: true,
+                isCurrent: true,
+                isNext: false,
+                isPrevious: false,
+              },
+            ],
+          },
+        },
+      },
+    ];
+
+    renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures' });
+
+    expect(await screen.findByText('2 – 1')).toBeInTheDocument();
+  });
 });
 
 describe('EventsPage', () => {
@@ -246,6 +313,54 @@ describe('EventsPage', () => {
     renderWithProviders(<EventsPage />, { mocks, route: '/events?selected=1' });
 
     expect(await screen.findByText('Gameweek details: Gameweek 1')).toBeInTheDocument();
-    expect(screen.getAllByText('2026-08-10T17:30:00Z').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Aug/).length).toBeGreaterThan(0);
+  });
+
+  it('shows TBC in detail panel when deadlineTime is null', async () => {
+    const mocks = [
+      {
+        request: { query: EVENTS_QUERY },
+        result: {
+          data: {
+            events: [
+              {
+                id: 2,
+                name: 'Gameweek 2',
+                deadlineTime: null,
+                averageEntryScore: null,
+                finished: false,
+                dataChecked: false,
+                isCurrent: false,
+                isNext: true,
+                isPrevious: false,
+              },
+            ],
+          },
+        },
+      },
+      {
+        request: { query: EVENT_QUERY, variables: { id: 2 } },
+        result: {
+          data: {
+            event: {
+              id: 2,
+              name: 'Gameweek 2',
+              deadlineTime: null,
+              averageEntryScore: null,
+              finished: false,
+              dataChecked: false,
+              isCurrent: false,
+              isNext: true,
+              isPrevious: false,
+            },
+          },
+        },
+      },
+    ];
+
+    renderWithProviders(<EventsPage />, { mocks, route: '/events?selected=2' });
+
+    expect(await screen.findByText('Gameweek details: Gameweek 2')).toBeInTheDocument();
+    expect(screen.getAllByText('TBC').length).toBeGreaterThan(0);
   });
 });

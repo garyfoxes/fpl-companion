@@ -14,6 +14,7 @@ import { useSearchParams } from 'react-router-dom';
 import { DetailPanel } from '../components/DetailPanel';
 import { PageState } from '../components/PageState';
 import { EVENT_QUERY, EVENTS_QUERY } from '../lib/queries';
+import { formatDate } from '../utils/formatDate';
 import { readIntParam, setParam } from '../utils/urlState';
 
 export function EventsPage() {
@@ -65,7 +66,7 @@ export function EventsPage() {
                 >
                   <TableCell>{event.id}</TableCell>
                   <TableCell>{event.name}</TableCell>
-                  <TableCell>{event.deadlineTime || 'TBC'}</TableCell>
+                  <TableCell>{formatDate(event.deadlineTime)}</TableCell>
                   <TableCell>{event.isCurrent ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{event.isNext ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{event.finished ? 'Yes' : 'No'}</TableCell>
@@ -81,7 +82,7 @@ export function EventsPage() {
           title={`Gameweek details: ${detailQuery.data.event.name}`}
           rows={[
             { label: 'Average Entry Score', value: detailQuery.data.event.averageEntryScore },
-            { label: 'Deadline', value: detailQuery.data.event.deadlineTime },
+            { label: 'Deadline', value: formatDate(detailQuery.data.event.deadlineTime) },
             { label: 'Data Checked', value: String(detailQuery.data.event.dataChecked) },
             { label: 'Previous', value: String(detailQuery.data.event.isPrevious) },
           ]}
