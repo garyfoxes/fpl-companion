@@ -3,16 +3,17 @@ description: Triage → Implement → Review using AGENTS.md guardrails and repo
 agent: 'agent'
 model: Claude Sonnet 4.6
 tools: ['agent', 'read', 'search', 'edit', 'read/terminalLastCommand', 'search/usages']
+argument-hint: 'Task: describe the feature/fix + acceptance criteria. Scope: frontend|api|both. Paths: relevant files (optional). Avoid: anything off-limits (optional).'
 ---
 
 Task:
-${input:task:Describe the feature/fix + acceptance criteria}
+${input:task}
 
 Optional: Context
 
-- Scope hint (frontend|api|both): ${input:scope:}
-- Any relevant paths (comma-separated): ${input:paths:}
-- Anything to avoid changing: ${input:avoid:}
+- Scope hint (frontend|api|both): ${input:scope}
+- Any relevant paths (comma-separated): ${input:paths}
+- Anything to avoid changing: ${input:avoid}
 
 Selected code (if any):
 ${selection}
