@@ -15,9 +15,7 @@ const FixturesPage = lazy(() =>
 const PlayersPage = lazy(() =>
   import('./pages/PlayersPage').then((m) => ({ default: m.PlayersPage }))
 );
-const TeamsPage = lazy(() =>
-  import('./pages/TeamsPage').then((m) => ({ default: m.TeamsPage }))
-);
+const TeamsPage = lazy(() => import('./pages/TeamsPage').then((m) => ({ default: m.TeamsPage })));
 
 function App() {
   return (

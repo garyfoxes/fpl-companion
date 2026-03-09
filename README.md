@@ -199,11 +199,11 @@ All page components (`DashboardPage`, `PlayersPage`, `TeamsPage`, `FixturesPage`
 
 The Vite production build splits output into stable vendor chunks for effective browser caching across deploys:
 
-| Chunk | Contents |
-| --- | --- |
-| `vendor-react` | `react`, `react-dom`, `react-router-dom` |
-| `vendor-apollo` | `@apollo/client`, `graphql` |
-| `vendor-mui` | `@mui/material`, `@emotion/react`, `@emotion/styled` |
+| Chunk           | Contents                                             |
+| --------------- | ---------------------------------------------------- |
+| `vendor-react`  | `react`, `react-dom`, `react-router-dom`             |
+| `vendor-apollo` | `@apollo/client`, `graphql`                          |
+| `vendor-mui`    | `@mui/material`, `@emotion/react`, `@emotion/styled` |
 
 ## Docker
 
