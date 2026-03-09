@@ -67,6 +67,11 @@ Implementation behavior:
     - lint/test run across workspaces
     - test:e2e:smoke runs for apps/web
 
+When creating a PR with `gh pr create`, always supply an explicit `--body` that follows
+`.github/pull_request_template.md` exactly (all sections: Summary, Linked Issue,
+Screenshots, How To Test with checkboxes, Risk Assessment, Reviewer Checklist).
+Never use `--fill` — it ignores the template and populates from commit messages only.
+
 Before finishing, return:
 
 1. Summary of changes
