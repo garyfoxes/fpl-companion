@@ -54,7 +54,8 @@ Implementation behavior:
    - README.md: new/changed npm scripts, env vars, architecture diagrams, or Getting Started steps
    - AGENTS.md: new conventions, guardrails, or frontend/API patterns agents must follow
    - Only update docs that are directly affected; do not rewrite unrelated sections.
-     Testing expectations (must comply with AGENTS.md):
+
+Testing expectations (must comply with AGENTS.md):
 
 - Validate (in this order unless blocked):
   1. npm run format

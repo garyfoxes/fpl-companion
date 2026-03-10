@@ -10,7 +10,12 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-apollo': ['@apollo/client', 'graphql'],
-          'vendor-mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
+          'vendor-mui': [
+            '@mui/material',
+            '@mui/material/styles',
+            '@emotion/react',
+            '@emotion/styled',
+          ],
         },
       },
     },
