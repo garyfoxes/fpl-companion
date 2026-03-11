@@ -71,6 +71,13 @@ Follow `.github/pull_request_template.md` and include:
 - Risks and rollback notes.
 - Screenshots for UI-impacting changes.
 
+## Frontend Performance Conventions
+
+- All page-level components must remain lazy-loaded via `React.lazy()` in `App.jsx`; do not convert them back to static imports.
+- Named-export pages must use the `.then((m) => ({ default: m.ExportName }))` pattern with `React.lazy()` since all pages use named exports.
+- The Vite `manualChunks` config in `apps/web/vite.config.mjs` groups `react/react-dom/react-router-dom`, `@apollo/client/graphql`, and `@mui/material/@emotion/*` into stable vendor chunks — do not collapse them.
+- Run Lighthouse against `npm run preview` (production build, port 4173), not `npm run dev` (port 5173), for representative scores.
+
 ## Guardrails
 
 - Do not introduce DB dependencies in MVP unless explicitly requested.

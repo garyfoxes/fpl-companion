@@ -69,6 +69,8 @@ describe('PlayersPage', () => {
 
     expect(screen.getByText('Loading data...')).toBeInTheDocument();
     expect(await screen.findByText('Haaland')).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Team' })).toBeInTheDocument();
+    expect(await screen.findByText('MCI')).toBeInTheDocument();
     expect(await screen.findByText('Player details: Haaland')).toBeInTheDocument();
   });
 
@@ -100,5 +102,63 @@ describe('PlayersPage', () => {
     renderWithProviders(<PlayersPage />, { mocks, route: '/players' });
 
     expect(await screen.findByText('No players matched your filters.')).toBeInTheDocument();
+  });
+
+  it('renders error state when teamsQuery fails', async () => {
+    const mocks = [
+      {
+        request: { query: TEAMS_QUERY },
+        error: new Error('Network error'),
+      },
+      {
+        request: {
+          query: PLAYERS_QUERY,
+          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
+        },
+        result: { data: { players: [] } },
+      },
+    ];
+
+    renderWithProviders(<PlayersPage />, { mocks, route: '/players' });
+
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+  });
+
+  it('shows N/A in team cell for a player with teamId null', async () => {
+    const mocks = [
+      {
+        request: { query: TEAMS_QUERY },
+        result: { data: { teams: [] } },
+      },
+      {
+        request: {
+          query: PLAYERS_QUERY,
+          variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
+        },
+        result: {
+          data: {
+            players: [
+              {
+                id: 99,
+                firstName: 'Unknown',
+                lastName: 'Player',
+                webName: 'Unknown',
+                teamId: null,
+                position: 'MID',
+                nowCost: 5,
+                totalPoints: 0,
+                form: null,
+                status: 'u',
+              },
+            ],
+          },
+        },
+      },
+    ];
+
+    renderWithProviders(<PlayersPage />, { mocks, route: '/players' });
+
+    expect(await screen.findByText('Unknown')).toBeInTheDocument();
+    expect(screen.getAllByText('N/A').length).toBeGreaterThan(0);
   });
 });

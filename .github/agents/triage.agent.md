@@ -34,6 +34,7 @@ Your job:
 2. Identify likely touch points (file paths + symbols):
    - API: schema, resolvers, datasources, upstream mapping, mappers, error mapping
    - Web: routes/pages, Apollo Client queries/mutations, loading/error/empty states, URL-filter persistence
+   - Docs: README.md and/or AGENTS.md when the change adds/removes scripts, env vars, architecture patterns, conventions, or new frontend performance rules
 3. Produce a minimal PR plan (smallest diff that meets acceptance criteria)
 4. Call out risks/edge cases (breaking GraphQL fields, caching, malformed upstream, API-down UX, URL filters)
 5. Produce a concrete test plan aligned to AGENTS.md required coverage
@@ -42,8 +43,8 @@ Output EXACTLY these sections:
 
 A) Summary (1–2 lines)
 B) Scope (Frontend/API/Both)
-C) Touch points (bullets: file paths/symbols)
-D) Plan (numbered, minimal steps)
+C) Touch points (bullets: file paths/symbols — include README.md / AGENTS.md if docs need updating)
+D) Plan (numbered, minimal steps — include a doc update step if scripts, env vars, architecture, or conventions change)
 E) Risks & edge cases (bullets)
 F) Test plan
 

@@ -49,7 +49,11 @@ Implementation behavior:
    - Update schema + resolvers
    - Update client operations in apps/web
    - Ensure error codes + partial data behavior remain compliant
-4. Add tests as part of the change (no “TODO tests”).
+4. Add tests as part of the change (no "TODO tests").
+5. Update docs where relevant (AGENTS.md guardrail: "Keep docs current when scripts, env vars, or architecture change"):
+   - README.md: new/changed npm scripts, env vars, architecture diagrams, or Getting Started steps
+   - AGENTS.md: new conventions, guardrails, or frontend/API patterns agents must follow
+   - Only update docs that are directly affected; do not rewrite unrelated sections.
 
 Testing expectations (must comply with AGENTS.md):
 
@@ -63,6 +67,11 @@ Testing expectations (must comply with AGENTS.md):
   - Root scripts already do the right thing:
     - lint/test run across workspaces
     - test:e2e:smoke runs for apps/web
+
+When creating a PR with `gh pr create`, always supply an explicit `--body` that follows
+`.github/pull_request_template.md` exactly (all sections: Summary, Linked Issue,
+Screenshots, How To Test with checkboxes, Risk Assessment, Reviewer Checklist).
+Never use `--fill` — it ignores the template and populates from commit messages only.
 
 Before finishing, return:
 

@@ -50,6 +50,7 @@ export function PlayersPage() {
   });
 
   const players = data?.players || [];
+  const teamMap = Object.fromEntries((teamsQuery.data?.teams || []).map((t) => [t.id, t]));
 
   function updateFilter(key, value) {
     let next = setParam(searchParams, key, value);
@@ -125,7 +126,7 @@ export function PlayersPage() {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Position</TableCell>
-                <TableCell>Team ID</TableCell>
+                <TableCell>Team</TableCell>
                 <TableCell>Total Points</TableCell>
                 <TableCell>Form</TableCell>
               </TableRow>
@@ -141,7 +142,12 @@ export function PlayersPage() {
                 >
                   <TableCell>{player.webName}</TableCell>
                   <TableCell>{player.position}</TableCell>
-                  <TableCell>{player.teamId ?? 'N/A'}</TableCell>
+                  <TableCell>
+                    {(teamMap[player.teamId]?.shortName ||
+                      teamMap[player.teamId]?.name ||
+                      player.teamId) ??
+                      'N/A'}
+                  </TableCell>
                   <TableCell>{player.totalPoints ?? 'N/A'}</TableCell>
                   <TableCell>{player.form ?? 'N/A'}</TableCell>
                 </TableRow>

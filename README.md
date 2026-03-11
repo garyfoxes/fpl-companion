@@ -173,9 +173,37 @@ npm run format:write    # auto-fix formatting
 npm run lint
 npm run test
 npm run test:e2e:smoke
-npm run build
+npm run build           # production build (all workspaces)
+npm run preview         # serve the production web build locally (http://localhost:4173)
 npm run hooks:install
 ```
+
+### Production preview
+
+To run and audit the production build locally:
+
+```bash
+npm run build
+npm run preview
+```
+
+The preview server (`vite preview`) serves the pre-built `apps/web/dist/` as a static site — no HMR, no dev transforms. Use this for accurate Lighthouse measurements instead of the dev server.
+
+## Frontend Architecture
+
+### Code splitting
+
+All page components (`DashboardPage`, `PlayersPage`, `TeamsPage`, `FixturesPage`, `EventsPage`) are lazy-loaded via `React.lazy()` with a `<Suspense>` fallback. This reduces the initial JS parse time (only the shell + current route's code loads on first paint).
+
+### Build chunks
+
+The Vite production build splits output into stable vendor chunks for effective browser caching across deploys:
+
+| Chunk           | Contents                                             |
+| --------------- | ---------------------------------------------------- |
+| `vendor-react`  | `react`, `react-dom`, `react-router-dom`             |
+| `vendor-apollo` | `@apollo/client`, `graphql`                          |
+| `vendor-mui`    | `@mui/material`, `@emotion/react`, `@emotion/styled` |
 
 ## Docker
 
