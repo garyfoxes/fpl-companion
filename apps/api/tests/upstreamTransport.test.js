@@ -1,5 +1,9 @@
 const { createRequestTargets, requestUpstreamJson } = require('../src/upstream/upstreamTransport');
-const { UpstreamTimeoutError, UpstreamUnavailableError } = require('../src/errors/upstreamErrors');
+const {
+  BadUpstreamResponseError,
+  UpstreamTimeoutError,
+  UpstreamUnavailableError,
+} = require('../src/errors/upstreamErrors');
 
 function createMockResponse(payload, ok = true, status = 200) {
   return {
@@ -152,5 +156,25 @@ describe('upstreamTransport', () => {
         pathname: '/api/events',
       })
     ).rejects.toBeInstanceOf(UpstreamUnavailableError);
+  });
+
+  it('preserves bad-upstream-response errors for invalid JSON on final candidate', async () => {
+    const fetchImpl = jest.fn().mockResolvedValue(createInvalidJsonResponse());
+
+    try {
+      await requestUpstreamJson({
+        fetchImpl,
+        baseUrls: ['https://example.test'],
+        timeoutMs: 500,
+        pathname: '/api/events',
+      });
+      throw new Error('Expected requestUpstreamJson to throw');
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadUpstreamResponseError);
+      expect(error).toMatchObject({
+        code: 'BAD_UPSTREAM_RESPONSE',
+        statusCode: 502,
+      });
+    }
   });
 });

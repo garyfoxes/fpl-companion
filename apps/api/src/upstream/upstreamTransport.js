@@ -1,43 +1,44 @@
 const {
+  UpstreamError,
   UpstreamTimeoutError,
   UpstreamUnavailableError,
   BadUpstreamResponseError,
 } = require('../errors/upstreamErrors');
 
-function getPathCandidates(pathname) {
-  const pathFallbacks = {
-    '/api/players': [
-      '/players',
-      '/api/v1/players',
-      '/v1/players',
-      '/api/bootstrap-static/',
-      '/api/bootstrap-static',
-      '/bootstrap-static/',
-      '/bootstrap-static',
-    ],
-    '/api/teams': [
-      '/teams',
-      '/api/v1/teams',
-      '/v1/teams',
-      '/api/bootstrap-static/',
-      '/api/bootstrap-static',
-      '/bootstrap-static/',
-      '/bootstrap-static',
-    ],
-    '/api/events': [
-      '/events',
-      '/api/v1/events',
-      '/v1/events',
-      '/api/bootstrap-static/',
-      '/api/bootstrap-static',
-      '/bootstrap-static/',
-      '/bootstrap-static',
-    ],
-    '/api/fixtures': ['/fixtures', '/api/fixtures/', '/api/v1/fixtures', '/v1/fixtures'],
-  };
+const PATH_FALLBACKS = {
+  '/api/players': [
+    '/players',
+    '/api/v1/players',
+    '/v1/players',
+    '/api/bootstrap-static/',
+    '/api/bootstrap-static',
+    '/bootstrap-static/',
+    '/bootstrap-static',
+  ],
+  '/api/teams': [
+    '/teams',
+    '/api/v1/teams',
+    '/v1/teams',
+    '/api/bootstrap-static/',
+    '/api/bootstrap-static',
+    '/bootstrap-static/',
+    '/bootstrap-static',
+  ],
+  '/api/events': [
+    '/events',
+    '/api/v1/events',
+    '/v1/events',
+    '/api/bootstrap-static/',
+    '/api/bootstrap-static',
+    '/bootstrap-static/',
+    '/bootstrap-static',
+  ],
+  '/api/fixtures': ['/fixtures', '/api/fixtures/', '/api/v1/fixtures', '/v1/fixtures'],
+};
 
+function getPathCandidates(pathname) {
   const candidates = [pathname];
-  for (const fallbackPath of pathFallbacks[pathname] || []) {
+  for (const fallbackPath of PATH_FALLBACKS[pathname] || []) {
     if (!candidates.includes(fallbackPath)) {
       candidates.push(fallbackPath);
     }
@@ -131,7 +132,7 @@ async function requestUpstreamJson({ fetchImpl, baseUrls, timeoutMs, pathname })
       throw new UpstreamTimeoutError(`Upstream timed out for ${pathname}`);
     }
 
-    if (error.code && error.code.startsWith('UPSTREAM_')) {
+    if (error instanceof UpstreamError) {
       throw error;
     }
 
