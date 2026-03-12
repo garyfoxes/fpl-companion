@@ -24,7 +24,13 @@ Out of scope for MVP:
 - Monorepo managed with npm workspaces.
 - `apps/api` — GraphQL API server (Express + Apollo). Key paths:
   - `src/graphql/` — schema and resolvers.
-  - `src/upstream/` — FPL data source, mappers (upstream-shape handling stays here).
+  - `src/upstream/` — FPL upstream integration modules (upstream-shape handling stays here):
+    - `fplDataSource.js` thin facade (public datasource methods + cache/readiness orchestration).
+    - `upstreamTransport.js` request/fallback/timeout/error transport logic.
+    - `payloadExtractors.js` list/object payload extraction.
+    - `entityDescriptors.js` per-entity endpoint/cache/mapper metadata.
+    - `healthState.js` readiness/health state helpers.
+    - `mappers.js` normalization of upstream payloads.
   - `src/cache/` — TTL-based in-memory / Redis cache.
   - `src/errors/` — upstream error classes.
   - `src/utils/` — filter, paginate, sort helpers.
@@ -99,6 +105,18 @@ Follow `.github/pull_request_template.md` and include:
 - Test evidence.
 - Risks and rollback notes.
 - Screenshots for UI-impacting changes.
+
+## Task Closeout Checklist
+
+Use this checklist before marking any task complete:
+
+1. `AGENTS.md` compliance reviewed.
+2. Docs updated if scripts, env vars, architecture, or conventions changed.
+3. Required validations completed:
+   - `npm run format`
+   - `npm run lint`
+   - `npm run test`
+   - `npm run test:e2e:smoke`
 
 ## Frontend Performance Conventions
 

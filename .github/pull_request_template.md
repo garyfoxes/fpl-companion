@@ -17,6 +17,7 @@ Add before/after screenshots or short clips.
 - [ ] `npm run lint`
 - [ ] `npm run test`
 - [ ] `npm run test:e2e:smoke`
+- [ ] Documentation impact reviewed; updated `README.md` and/or `AGENTS.md` when scripts, env vars, architecture, or conventions changed
 - [ ] Manual validation notes added below
 
 ## Risk Assessment

@@ -40,6 +40,17 @@ flowchart LR
     Cache --> API
 ```
 
+### API upstream modules
+
+`apps/api/src/upstream/` is now split so `FplDataSource` stays a thin facade:
+
+- `fplDataSource.js` — public datasource class, cache orchestration, readiness flow.
+- `upstreamTransport.js` — request target generation, path/base URL fallback, timeout handling, JSON parse fallback, upstream error mapping.
+- `payloadExtractors.js` — list/object payload extraction helpers.
+- `entityDescriptors.js` — per-entity endpoint/cache/mapper metadata.
+- `healthState.js` — health state creation/update and readiness payload formatting.
+- `mappers.js` — upstream payload normalization into API-facing shapes.
+
 ## Request Flow
 
 ```mermaid
