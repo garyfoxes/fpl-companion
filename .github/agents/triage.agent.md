@@ -41,8 +41,5 @@ B) Scope (Frontend/API/Both)
 C) Touch points (bullets: file paths/symbols — include README.md / AGENTS.md if docs need updating)
 D) Plan (numbered, minimal steps — include a doc update step if scripts, env vars, architecture, or conventions change)
 E) Risks & edge cases (bullets)
-F) Test plan
-
-- Jest: what to add/update + key assertions
-- Playwright smoke: whether needed + what user flow
-  G) Required verification: run the `ci-validation` skill sequence
+F) Test plan — Jest: what to add/update + key assertions; Playwright smoke: whether needed + what user flow
+G) Required verification: run the `ci-validation` skill sequence
