@@ -1,62 +1,16 @@
 const { InMemoryCache } = require('../cache/inMemoryCache');
 const { RedisCacheAdapter } = require('../cache/redisCacheAdapter');
+const { BadUpstreamResponseError } = require('../errors/upstreamErrors');
+const { mapArray } = require('./mappers');
+const { requestUpstreamJson, getPathCandidates } = require('./upstreamTransport');
+const { extractList, extractObject } = require('./payloadExtractors');
+const { getListConfig, getItemConfig } = require('./entityDescriptors');
 const {
-  UpstreamTimeoutError,
-  UpstreamUnavailableError,
-  BadUpstreamResponseError,
-} = require('../errors/upstreamErrors');
-const { mapPlayer, mapTeam, mapFixture, mapEvent, mapArray } = require('./mappers');
-
-function extractList(payload, key) {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  const keyCandidates = {
-    players: ['players', 'elements'],
-    teams: ['teams'],
-    fixtures: ['fixtures'],
-    events: ['events'],
-  }[key] || [key];
-
-  const candidates = [
-    payload?.data,
-    ...keyCandidates.map((candidateKey) => payload?.[candidateKey]),
-    payload?.results,
-    payload?.response,
-  ];
-  for (const candidate of candidates) {
-    if (Array.isArray(candidate)) {
-      return candidate;
-    }
-
-    if (candidate && typeof candidate === 'object') {
-      for (const candidateKey of keyCandidates) {
-        if (Array.isArray(candidate[candidateKey])) {
-          return candidate[candidateKey];
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
-function extractObject(payload, key) {
-  if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
-    if (payload[key] && typeof payload[key] === 'object') {
-      return payload[key];
-    }
-
-    if (payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data)) {
-      return payload.data;
-    }
-
-    return payload;
-  }
-
-  return null;
-}
+  createHealthState,
+  markHealthSuccess,
+  markHealthFailure,
+  createReadinessPayload,
+} = require('./healthState');
 
 class FplDataSource {
   constructor(options = {}) {
@@ -74,147 +28,26 @@ class FplDataSource {
     this.cache =
       options.cache || (options.redisUrl ? new RedisCacheAdapter() : new InMemoryCache());
     this.ttl = options.ttl;
-    this.health = {
-      lastSuccessAt: null,
-      lastFailureAt: null,
-      lastError: null,
-    };
+    this.health = createHealthState();
   }
 
   getPathCandidates(pathname) {
-    const pathFallbacks = {
-      '/api/players': [
-        '/players',
-        '/api/v1/players',
-        '/v1/players',
-        '/api/bootstrap-static/',
-        '/api/bootstrap-static',
-        '/bootstrap-static/',
-        '/bootstrap-static',
-      ],
-      '/api/teams': [
-        '/teams',
-        '/api/v1/teams',
-        '/v1/teams',
-        '/api/bootstrap-static/',
-        '/api/bootstrap-static',
-        '/bootstrap-static/',
-        '/bootstrap-static',
-      ],
-      '/api/events': [
-        '/events',
-        '/api/v1/events',
-        '/v1/events',
-        '/api/bootstrap-static/',
-        '/api/bootstrap-static',
-        '/bootstrap-static/',
-        '/bootstrap-static',
-      ],
-      '/api/fixtures': ['/fixtures', '/api/fixtures/', '/api/v1/fixtures', '/v1/fixtures'],
-    };
-
-    const candidates = [pathname];
-    for (const fallbackPath of pathFallbacks[pathname] || []) {
-      if (!candidates.includes(fallbackPath)) {
-        candidates.push(fallbackPath);
-      }
-    }
-
-    return candidates;
+    return getPathCandidates(pathname);
   }
 
   async request(pathname) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
-
     try {
-      const pathCandidates = this.getPathCandidates(pathname);
-      const requestTargets = [];
-      for (const baseUrl of this.baseUrls) {
-        for (const pathCandidate of pathCandidates) {
-          requestTargets.push({
-            baseUrl,
-            path: pathCandidate,
-          });
-        }
-      }
-      let payload;
-      let allCandidatesWereNotFound = true;
-      let lastFailureMessage = null;
-
-      for (let i = 0; i < requestTargets.length; i += 1) {
-        const target = requestTargets[i];
-        const response = await this.fetchImpl(`${target.baseUrl}${target.path}`, {
-          method: 'GET',
-          signal: controller.signal,
-          headers: {
-            Accept: 'application/json',
-          },
-        });
-
-        const isLastCandidate = i === requestTargets.length - 1;
-
-        if (!response.ok) {
-          lastFailureMessage = `Upstream returned ${response.status} for ${target.path}`;
-
-          if (response.status !== 404) {
-            allCandidatesWereNotFound = false;
-          }
-
-          const shouldTryFallback = response.status === 404 && !isLastCandidate;
-
-          if (shouldTryFallback) {
-            continue;
-          }
-
-          throw new UpstreamUnavailableError(lastFailureMessage, response.status);
-        }
-
-        allCandidatesWereNotFound = false;
-
-        try {
-          payload = await response.json();
-          break;
-        } catch {
-          lastFailureMessage = `Failed to parse upstream JSON for ${target.path}`;
-
-          if (!isLastCandidate) {
-            continue;
-          }
-
-          throw new BadUpstreamResponseError(lastFailureMessage);
-        }
-      }
-
-      if (payload === undefined) {
-        const triedPaths = requestTargets.map((target) => `${target.baseUrl}${target.path}`);
-        const message = allCandidatesWereNotFound
-          ? `Upstream returned 404 for ${pathname}; tried URLs: ${triedPaths.join(', ')}`
-          : `Upstream request failed for ${pathname}${lastFailureMessage ? `: ${lastFailureMessage}` : ''}`;
-        const statusCode = allCandidatesWereNotFound ? 404 : 503;
-        throw new UpstreamUnavailableError(message, statusCode);
-      }
-
-      this.health.lastSuccessAt = new Date().toISOString();
-      this.health.lastError = null;
+      const payload = await requestUpstreamJson({
+        fetchImpl: this.fetchImpl,
+        baseUrls: this.baseUrls,
+        timeoutMs: this.timeoutMs,
+        pathname,
+      });
+      markHealthSuccess(this.health);
       return payload;
     } catch (error) {
-      this.health.lastFailureAt = new Date().toISOString();
-      this.health.lastError = error.message;
-
-      if (error.name === 'AbortError') {
-        throw new UpstreamTimeoutError(`Upstream timed out for ${pathname}`);
-      }
-
-      if (error.code && error.code.startsWith('UPSTREAM_')) {
-        throw error;
-      }
-
-      throw new UpstreamUnavailableError(
-        `Failed upstream request for ${pathname}: ${error.message}`
-      );
-    } finally {
-      clearTimeout(timeoutId);
+      markHealthFailure(this.health, error);
+      throw error;
     }
   }
 
@@ -280,23 +113,11 @@ class FplDataSource {
   }
 
   async listPlayers() {
-    return this.getCollection({
-      cacheKey: 'players:list',
-      ttlSec: this.ttl.players,
-      endpoint: '/api/players',
-      mapper: mapPlayer,
-      payloadKey: 'players',
-    });
+    return this.getCollection(getListConfig('players', this.ttl));
   }
 
   async getPlayerById(id) {
-    const player = await this.getItem({
-      cacheKey: `players:${id}`,
-      ttlSec: this.ttl.players,
-      endpoint: `/api/player/${id}`,
-      mapper: mapPlayer,
-      payloadKey: 'player',
-    });
+    const player = await this.getItem(getItemConfig('players', id, this.ttl));
 
     if (player) {
       return player;
@@ -307,23 +128,11 @@ class FplDataSource {
   }
 
   async listTeams() {
-    return this.getCollection({
-      cacheKey: 'teams:list',
-      ttlSec: this.ttl.teams,
-      endpoint: '/api/teams',
-      mapper: mapTeam,
-      payloadKey: 'teams',
-    });
+    return this.getCollection(getListConfig('teams', this.ttl));
   }
 
   async getTeamById(id) {
-    const team = await this.getItem({
-      cacheKey: `teams:${id}`,
-      ttlSec: this.ttl.teams,
-      endpoint: `/api/team/${id}`,
-      mapper: mapTeam,
-      payloadKey: 'team',
-    });
+    const team = await this.getItem(getItemConfig('teams', id, this.ttl));
 
     if (team) {
       return team;
@@ -334,23 +143,11 @@ class FplDataSource {
   }
 
   async listFixtures() {
-    return this.getCollection({
-      cacheKey: 'fixtures:list',
-      ttlSec: this.ttl.fixtures,
-      endpoint: '/api/fixtures',
-      mapper: mapFixture,
-      payloadKey: 'fixtures',
-    });
+    return this.getCollection(getListConfig('fixtures', this.ttl));
   }
 
   async getFixtureById(id) {
-    const fixture = await this.getItem({
-      cacheKey: `fixtures:${id}`,
-      ttlSec: this.ttl.fixtures,
-      endpoint: `/api/fixture/${id}`,
-      mapper: mapFixture,
-      payloadKey: 'fixture',
-    });
+    const fixture = await this.getItem(getItemConfig('fixtures', id, this.ttl));
 
     if (fixture) {
       return fixture;
@@ -361,23 +158,11 @@ class FplDataSource {
   }
 
   async listEvents() {
-    return this.getCollection({
-      cacheKey: 'events:list',
-      ttlSec: this.ttl.events,
-      endpoint: '/api/events',
-      mapper: mapEvent,
-      payloadKey: 'events',
-    });
+    return this.getCollection(getListConfig('events', this.ttl));
   }
 
   async getEventById(id) {
-    const event = await this.getItem({
-      cacheKey: `events:${id}`,
-      ttlSec: this.ttl.events,
-      endpoint: `/api/event/${id}`,
-      mapper: mapEvent,
-      payloadKey: 'event',
-    });
+    const event = await this.getItem(getItemConfig('events', id, this.ttl));
 
     if (event) {
       return event;
@@ -390,21 +175,9 @@ class FplDataSource {
   async readiness() {
     try {
       await this.request('/api/events');
-      return {
-        status: 'ok',
-        upstreamReachable: true,
-        lastSuccessAt: this.health.lastSuccessAt,
-        lastFailureAt: this.health.lastFailureAt,
-        lastError: this.health.lastError,
-      };
+      return createReadinessPayload(this.health, true);
     } catch {
-      return {
-        status: 'degraded',
-        upstreamReachable: false,
-        lastSuccessAt: this.health.lastSuccessAt,
-        lastFailureAt: this.health.lastFailureAt,
-        lastError: this.health.lastError,
-      };
+      return createReadinessPayload(this.health, false);
     }
   }
 }
