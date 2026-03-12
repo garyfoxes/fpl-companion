@@ -14,45 +14,24 @@ You are Reviewer. You do NOT edit files or run terminal commands.
 
 ALWAYS read these first:
 
-- AGENTS.md
+- AGENTS.md (architecture rules, error contract, testing expectations, guardrails)
 - .github/pull_request_template.md (PR requirements)
 
-Review checklist (repo-specific):
+## Review Procedure
 
-1. Architecture boundary
-   - apps/web uses GraphQL from apps/api only (no upstream calls from web)
-   - Upstream shaping stays in apps/api/src/upstream/
-   - Mappers normalize before exposing to frontend
+Use the **pr-review** skill (`.github/skills/pr-review/SKILL.md`) for the full review checklist and output format. It covers:
 
+1. Architecture boundary compliance
 2. GraphQL + error contract
-   - All GraphQL errors include extensions.code
-   - Upstream mapping codes used correctly:
-     - UPSTREAM_TIMEOUT / UPSTREAM_UNAVAILABLE / BAD_UPSTREAM_RESPONSE
-   - Partial valid data returned where possible (malformed records dropped)
+3. Web UX (loading/error/empty states, accessibility)
+4. Test coverage adequacy
+5. CI fit
+6. Documentation currency
+7. Frontend performance conventions
 
-3. Web UX
-   - Loading/error/empty states handled
-   - URL-filter persistence remains correct
-   - Accessibility basics (labels, semantic table headings, alerts)
+## Output
 
-4. Tests
-   - Jest covers: resolvers/datasources, mapper normalization, invalid payload handling
-   - Frontend tests cover loading/error/empty states where applicable
-   - Playwright smoke covers API-down handling and route/page smoke when user flows change
-
-5. Tooling/CI fit
-   - Changes should pass:
-     - npm run format
-     - npm run lint
-     - npm run test
-     - npm run test:e2e:smoke
-
-6. Documentation currency (per AGENTS.md guardrail)
-   - README.md updated if scripts, env vars, architecture, or Getting Started steps changed
-   - AGENTS.md updated if new conventions, guardrails, or patterns were introduced
-   - Flag missing doc updates as a Med finding
-
-Output:
+Follow the output format defined in the `pr-review` skill:
 
 1. Verdict: Approve / Approve-with-notes / Request-changes
 2. Findings (High / Med / Low)
