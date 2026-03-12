@@ -19,21 +19,17 @@ Selected code (if any):
 ${selection}
 
 INSTRUCTIONS TO THE MAIN AGENT:
-You must orchestrate the work in three phases using the custom agents in .github/agents:
+You must orchestrate the work in three phases using the custom agents in .github/agents.
+All repo rules live in AGENTS.md — do not restate them here. Agents and skills reference AGENTS.md as the single source.
 
-1. Run triage as a subagent with the Task + context. Require it to output: touch points, minimal plan, risks, test plan, and required verification commands.
-2. Run Implementer as a subagent with Triage’s plan. It must implement + add tests + run:
-   - npm run format
-   - npm run lint
-   - npm run test
-   - npm run test:e2e:smoke
-     If a command fails, fix and rerun until green (within reason), then report outcomes.
-3. Run reviewer as a subagent on the final diff/result. If Reviewer returns Request-changes, run Implementer once more to address issues and rerun the required commands, then rerun Reviewer.
+1. Run **triage** as a subagent with the Task + context. Require it to output: touch points, minimal plan, risks, test plan, and required verification.
+2. Run **implementer** as a subagent with Triage's plan. It must implement the change, add tests, and run the `ci-validation` skill's verification sequence. If a command fails, fix and rerun until green (within reason), then report outcomes.
+3. Run **reviewer** as a subagent on the final diff/result. If Reviewer returns Request-changes, run Implementer once more to address issues and rerun checks, then rerun Reviewer.
 
 FINAL RESPONSE MUST INCLUDE:
 
 - Summary of changes
 - Files changed
-- Test evidence (all required commands + results)
+- Test evidence (all verification commands + results)
 - Any remaining risks/assumptions
 - PR notes aligned to .github/pull_request_template.md (screenshots if UI-impacting, rollback notes)
