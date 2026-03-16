@@ -115,9 +115,14 @@ describe('mappers', () => {
   });
 
   it('filters invalid mapped items from mapArray', () => {
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     const mapped = mapArray([{ id: 1, name: 'A' }, { bad: true }], mapTeam, 'teams');
     expect(mapped).toHaveLength(1);
     expect(mapped[0].id).toBe(1);
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Dropped 1 invalid teams record(s) from upstream payload.'
+    );
+    warnSpy.mockRestore();
   });
 
   it('preserves ICT/xG string-decimal fields', () => {

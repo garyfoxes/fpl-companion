@@ -8,7 +8,12 @@ export function renderWithProviders(ui, { mocks = [], route = '/' } = {}) {
   return render(
     <MockedProvider mocks={mocks}>
       <ThemeProvider theme={theme}>
-        <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
+        <MemoryRouter
+          future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+          initialEntries={[route]}
+        >
+          {ui}
+        </MemoryRouter>
       </ThemeProvider>
     </MockedProvider>
   );

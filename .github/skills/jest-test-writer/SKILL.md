@@ -62,9 +62,11 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 
 ## Test Environment Hygiene
 
-- **`console.warn` noise must be addressed**, not ignored. A clean test run should produce no unexpected output so that real warnings are visible.
-- If a framework (e.g. Apollo, MUI) emits a warn that is not caused by application code — typically a version-mismatch internal deprecation — suppress it with a targeted filter in `apps/web/tests/setupTests.js` using `beforeAll`/`afterAll`. The filter must match a unique string from that specific warn (e.g. the Apollo error CDN URL `go.apollo.dev/c/err`) so it does not silence unrelated warnings.
-- Never use a blanket `jest.spyOn(console, 'warn').mockImplementation(() => {})` without a guard condition — that hides real problems.
+- **Always run `npm run test` from the repo root** when checking for noise — this runs both `apps/api` and `apps/web`. Never scope to a single workspace to verify hygiene; warnings in the other workspace will be missed.
+- **`console.warn` and `console.error` noise must be addressed**, not ignored. A clean test run should produce no unexpected output so that real problems are visible.
+- If a framework (e.g. Apollo, MUI) emits warns or errors not caused by application code — suppress them with a targeted filter in `apps/web/tests/setupTests.js` using `beforeAll`/`afterAll`. The filter must match a unique string from that specific message (e.g. the Apollo error CDN URL `go.apollo.dev/c/err`) so it does not silence unrelated output. Apply the same filter to both `console.warn` and `console.error` when the framework uses both channels.
+- Note: Apollo's `MockedProvider` calls `console.error` when a mock's `error:` property fires (i.e. in intentional error-state tests). This is also covered by the Apollo CDN URL filter.
+- Never use a blanket `jest.spyOn(console, 'error').mockImplementation(() => {})` without a guard condition — that hides real problems.
 - When a framework patch resolves the underlying issue, remove the suppression.
 
 ## Running Tests
