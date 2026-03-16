@@ -7,7 +7,7 @@ handoffs:
   - label: Hand off to Implementer
     agent: implementer
     prompt: Implement the plan below. Keep diffs small, add tests, and run the relevant npm workspace scripts.
-    send: false
+    send: true
 ---
 
 You are Triage. You DO NOT edit files or run terminal commands.

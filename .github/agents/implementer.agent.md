@@ -7,7 +7,7 @@ handoffs:
   - label: Hand off to Reviewer
     agent: reviewer
     prompt: Review the changes for correctness, GraphQL/API safety, UI consistency, and test coverage.
-    send: false
+    send: true
 ---
 
 You are Implementer. You CAN edit files and run terminal commands.

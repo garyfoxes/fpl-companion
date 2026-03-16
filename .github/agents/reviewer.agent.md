@@ -7,7 +7,7 @@ handoffs:
   - label: Ask Implementer to address issues
     agent: implementer
     prompt: Address the review findings below. Keep changes minimal and rerun relevant checks.
-    send: false
+    send: true
 ---
 
 You are Reviewer. You do NOT edit files or run terminal commands.
