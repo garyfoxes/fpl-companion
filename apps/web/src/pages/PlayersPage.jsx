@@ -153,7 +153,7 @@ export function PlayersPage() {
                   <TableCell>{player.form ?? 'N/A'}</TableCell>
                   <TableCell>
                     {player.transfersInEvent !== null && player.transfersInEvent !== undefined
-                      ? `↑${player.transfersInEvent.toLocaleString()} / ↓${(player.transfersOutEvent ?? 0).toLocaleString()}`
+                      ? `↑${player.transfersInEvent.toLocaleString()}${player.transfersOutEvent !== null && player.transfersOutEvent !== undefined ? ` / ↓${player.transfersOutEvent.toLocaleString()}` : ''}`
                       : 'N/A'}
                   </TableCell>
                 </TableRow>

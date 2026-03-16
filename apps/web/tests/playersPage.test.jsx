@@ -12,7 +12,9 @@ describe('PlayersPage', () => {
         },
         result: {
           data: {
-            teams: [{ id: 1, name: 'Man City', shortName: 'MCI' }],
+            teams: [
+              { id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: null, position: 1 },
+            ],
           },
         },
       },
