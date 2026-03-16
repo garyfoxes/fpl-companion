@@ -106,10 +106,13 @@ Follow `.github/pull_request_template.md` and include:
 - Risks and rollback notes.
 - Screenshots for UI-impacting changes.
 
-When creating a PR with `gh pr create`, always supply an explicit `--body` that follows
-`.github/pull_request_template.md` exactly (all sections: Summary, Linked Issue,
-Screenshots, How To Test with checkboxes, Risk Assessment, Reviewer Checklist).
-Never use `--fill` — it ignores the template and populates from commit messages only.
+When creating a PR with `gh pr create`, always write the body to a temporary file
+and pass it via `--body-file <path>` — never use `--body` with an inline string, as
+newlines, backticks, and brackets get mangled by the shell. Delete the temp file
+after the PR is created. Never use `--fill` — it ignores the template and populates
+from commit messages only. The body must follow `.github/pull_request_template.md`
+exactly (all sections: Summary, Linked Issue, Screenshots, How To Test with
+checkboxes, Risk Assessment, Reviewer Checklist).
 
 ## Task Closeout Checklist
 
