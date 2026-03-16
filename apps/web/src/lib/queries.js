@@ -34,6 +34,8 @@ export const PLAYERS_QUERY = gql`
       totalPoints
       form
       status
+      transfersInEvent
+      transfersOutEvent
     }
   }
 `;
@@ -52,6 +54,32 @@ export const PLAYER_QUERY = gql`
       form
       status
       selectedByPercent
+      goals
+      assists
+      minutes
+      cleanSheets
+      yellowCards
+      redCards
+      bps
+      bonusPoints
+      influence
+      creativity
+      threat
+      ictIndex
+      influenceRank
+      creativityRank
+      threatRank
+      ictIndexRank
+      expectedGoals
+      expectedAssists
+      expectedGoalInvolvements
+      costChangeEvent
+      costChangeStart
+      news
+      chanceOfPlayingThisRound
+      chanceOfPlayingNextRound
+      transfersInEvent
+      transfersOutEvent
     }
   }
 `;

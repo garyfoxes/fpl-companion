@@ -60,6 +60,13 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 - Test that `syncFiltersToUrl` / `readFiltersFromUrl` round-trip correctly.
 - Test missing/malformed query params default gracefully.
 
+## Test Environment Hygiene
+
+- **`console.warn` noise must be addressed**, not ignored. A clean test run should produce no unexpected output so that real warnings are visible.
+- If a framework (e.g. Apollo, MUI) emits a warn that is not caused by application code — typically a version-mismatch internal deprecation — suppress it with a targeted filter in `apps/web/tests/setupTests.js` using `beforeAll`/`afterAll`. The filter must match a unique string from that specific warn (e.g. the Apollo error CDN URL `go.apollo.dev/c/err`) so it does not silence unrelated warnings.
+- Never use a blanket `jest.spyOn(console, 'warn').mockImplementation(() => {})` without a guard condition — that hides real problems.
+- When a framework patch resolves the underlying issue, remove the suppression.
+
 ## Running Tests
 
 Use the `ci-validation` skill for the full verification sequence. For quick iteration:

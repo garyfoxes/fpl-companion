@@ -129,6 +129,7 @@ export function PlayersPage() {
                 <TableCell>Team</TableCell>
                 <TableCell>Total Points</TableCell>
                 <TableCell>Form</TableCell>
+                <TableCell>Transfers (GW)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -150,6 +151,11 @@ export function PlayersPage() {
                   </TableCell>
                   <TableCell>{player.totalPoints ?? 'N/A'}</TableCell>
                   <TableCell>{player.form ?? 'N/A'}</TableCell>
+                  <TableCell>
+                    {player.transfersInEvent !== null && player.transfersInEvent !== undefined
+                      ? `↑${player.transfersInEvent.toLocaleString()} / ↓${(player.transfersOutEvent ?? 0).toLocaleString()}`
+                      : 'N/A'}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -164,8 +170,40 @@ export function PlayersPage() {
             { label: 'First Name', value: detailQuery.data.player.firstName },
             { label: 'Last Name', value: detailQuery.data.player.lastName },
             { label: 'Status', value: detailQuery.data.player.status },
+            { label: 'News', value: detailQuery.data.player.news },
+            {
+              label: 'Chance of Playing (This Round)',
+              value: detailQuery.data.player.chanceOfPlayingThisRound,
+            },
+            {
+              label: 'Chance of Playing (Next Round)',
+              value: detailQuery.data.player.chanceOfPlayingNextRound,
+            },
             { label: 'Selected By %', value: detailQuery.data.player.selectedByPercent },
             { label: 'Price', value: detailQuery.data.player.nowCost },
+            { label: 'Price Change (Event)', value: detailQuery.data.player.costChangeEvent },
+            { label: 'Price Change (Start)', value: detailQuery.data.player.costChangeStart },
+            { label: 'Goals', value: detailQuery.data.player.goals },
+            { label: 'Assists', value: detailQuery.data.player.assists },
+            { label: 'Minutes', value: detailQuery.data.player.minutes },
+            { label: 'Clean Sheets', value: detailQuery.data.player.cleanSheets },
+            { label: 'Yellow Cards', value: detailQuery.data.player.yellowCards },
+            { label: 'Red Cards', value: detailQuery.data.player.redCards },
+            { label: 'BPS', value: detailQuery.data.player.bps },
+            { label: 'Bonus Points', value: detailQuery.data.player.bonusPoints },
+            { label: 'Influence', value: detailQuery.data.player.influence },
+            { label: 'Creativity', value: detailQuery.data.player.creativity },
+            { label: 'Threat', value: detailQuery.data.player.threat },
+            { label: 'ICT Index', value: detailQuery.data.player.ictIndex },
+            { label: 'Influence Rank', value: detailQuery.data.player.influenceRank },
+            { label: 'Creativity Rank', value: detailQuery.data.player.creativityRank },
+            { label: 'Threat Rank', value: detailQuery.data.player.threatRank },
+            { label: 'ICT Index Rank', value: detailQuery.data.player.ictIndexRank },
+            { label: 'xG', value: detailQuery.data.player.expectedGoals },
+            { label: 'xA', value: detailQuery.data.player.expectedAssists },
+            { label: 'xGI', value: detailQuery.data.player.expectedGoalInvolvements },
+            { label: 'Transfers In (Event)', value: detailQuery.data.player.transfersInEvent },
+            { label: 'Transfers Out (Event)', value: detailQuery.data.player.transfersOutEvent },
           ]}
         />
       ) : null}

@@ -35,6 +35,8 @@ describe('PlayersPage', () => {
                 totalPoints: 200,
                 form: '8.1',
                 status: 'a',
+                transfersInEvent: 50000,
+                transfersOutEvent: 10000,
               },
             ],
           },
@@ -59,6 +61,32 @@ describe('PlayersPage', () => {
               form: '8.1',
               status: 'a',
               selectedByPercent: '55.0',
+              goals: 20,
+              assists: 5,
+              minutes: 2800,
+              cleanSheets: 0,
+              yellowCards: 1,
+              redCards: 0,
+              bps: 500,
+              bonusPoints: 35,
+              influence: '180.5',
+              creativity: '60.2',
+              threat: '300.1',
+              ictIndex: '62.3',
+              influenceRank: 2,
+              creativityRank: 10,
+              threatRank: 1,
+              ictIndexRank: 1,
+              expectedGoals: '18.50',
+              expectedAssists: '4.20',
+              expectedGoalInvolvements: '22.70',
+              costChangeEvent: 1,
+              costChangeStart: 5,
+              news: null,
+              chanceOfPlayingThisRound: null,
+              chanceOfPlayingNextRound: null,
+              transfersInEvent: 50000,
+              transfersOutEvent: 10000,
             },
           },
         },
@@ -72,6 +100,8 @@ describe('PlayersPage', () => {
     expect(screen.getByRole('columnheader', { name: 'Team' })).toBeInTheDocument();
     expect(await screen.findByText('MCI')).toBeInTheDocument();
     expect(await screen.findByText('Player details: Haaland')).toBeInTheDocument();
+    expect(await screen.findByText('Goals')).toBeInTheDocument();
+    expect(await screen.findByText('Transfers In (Event)')).toBeInTheDocument();
   });
 
   it('renders empty state', async () => {
@@ -149,6 +179,8 @@ describe('PlayersPage', () => {
                 totalPoints: 0,
                 form: null,
                 status: 'u',
+                transfersInEvent: null,
+                transfersOutEvent: null,
               },
             ],
           },
