@@ -25,6 +25,13 @@
           transform: rotate(360deg);
         }
       }
+      @media (prefers-reduced-motion: reduce) {
+        #root:empty::after {
+          animation: none;
+          border-top-color: #1976d2;
+          opacity: 0.6;
+        }
+      }
     </style>
   </head>
   <body>
