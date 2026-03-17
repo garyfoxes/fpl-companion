@@ -21,12 +21,17 @@ elif command -v fnm &>/dev/null; then
   fnm use 2>/dev/null || fnm install
 fi
 
-# Validate the active Node version satisfies .nvmrc; fail fast with a clear message
+# Validate the active Node version satisfies .nvmrc (>= required); fail fast with a clear message
 REQUIRED="$(cat .nvmrc | tr -d '[:space:]')"
 ACTIVE="$(node --version 2>/dev/null | tr -d 'v[:space:]')"
 
-if [ "$ACTIVE" != "$REQUIRED" ]; then
-  echo "ERROR: chrome-devtools-mcp requires Node $REQUIRED but found ${ACTIVE:-none}." >&2
+# semver_gte: returns 0 if $1 >= $2, 1 otherwise
+semver_gte() {
+  [ "$(printf '%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ]
+}
+
+if [ -z "$ACTIVE" ] || ! semver_gte "$ACTIVE" "$REQUIRED"; then
+  echo "ERROR: chrome-devtools-mcp requires Node >= $REQUIRED but found ${ACTIVE:-none}." >&2
   echo "Run 'nvm install' or 'fnm install' from the repo root, then retry." >&2
   exit 1
 fi
