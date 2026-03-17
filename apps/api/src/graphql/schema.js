@@ -73,6 +73,38 @@ const typeDefs = gql`
     form: String
     totalPoints: Float
     status: String
+    # Season stats
+    goals: Int
+    assists: Int
+    minutes: Int
+    cleanSheets: Int
+    yellowCards: Int
+    redCards: Int
+    bps: Int
+    bonusPoints: Int
+    # ICT Index
+    influence: String
+    creativity: String
+    threat: String
+    ictIndex: String
+    influenceRank: Int
+    creativityRank: Int
+    threatRank: Int
+    ictIndexRank: Int
+    # xG
+    expectedGoals: String
+    expectedAssists: String
+    expectedGoalInvolvements: String
+    # Price
+    costChangeEvent: Int
+    costChangeStart: Int
+    # Availability
+    news: String
+    chanceOfPlayingThisRound: Int
+    chanceOfPlayingNextRound: Int
+    # Transfers
+    transfersInEvent: Int
+    transfersOutEvent: Int
   }
 
   type Team {

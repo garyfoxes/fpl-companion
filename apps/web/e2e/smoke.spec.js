@@ -13,6 +13,32 @@ const players = [
     form: '8.2',
     status: 'a',
     selectedByPercent: '55.1',
+    goals: 20,
+    assists: 5,
+    minutes: 2800,
+    cleanSheets: 0,
+    yellowCards: 1,
+    redCards: 0,
+    bps: 500,
+    bonusPoints: 35,
+    influence: '180.5',
+    creativity: '60.2',
+    threat: '300.1',
+    ictIndex: '62.3',
+    influenceRank: 2,
+    creativityRank: 10,
+    threatRank: 1,
+    ictIndexRank: 1,
+    expectedGoals: '18.50',
+    expectedAssists: '4.20',
+    expectedGoalInvolvements: '22.70',
+    costChangeEvent: 1,
+    costChangeStart: 5,
+    news: null,
+    chanceOfPlayingThisRound: null,
+    chanceOfPlayingNextRound: null,
+    transfersInEvent: 50000,
+    transfersOutEvent: 10000,
   },
   {
     id: 2,
@@ -26,6 +52,32 @@ const players = [
     form: '7.2',
     status: 'a',
     selectedByPercent: '38.1',
+    goals: 12,
+    assists: 10,
+    minutes: 2700,
+    cleanSheets: 5,
+    yellowCards: 2,
+    redCards: 0,
+    bps: 400,
+    bonusPoints: 25,
+    influence: '120.3',
+    creativity: '150.5',
+    threat: '180.2',
+    ictIndex: '55.0',
+    influenceRank: 10,
+    creativityRank: 3,
+    threatRank: 5,
+    ictIndexRank: 3,
+    expectedGoals: '10.20',
+    expectedAssists: '9.10',
+    expectedGoalInvolvements: '19.30',
+    costChangeEvent: 0,
+    costChangeStart: 2,
+    news: null,
+    chanceOfPlayingThisRound: null,
+    chanceOfPlayingNextRound: null,
+    transfersInEvent: 30000,
+    transfersOutEvent: 8000,
   },
 ];
 
@@ -155,6 +207,13 @@ test('players search flow @smoke', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Players' })).toBeVisible();
   await page.getByLabel('Search player').fill('Haaland');
   await expect(page.getByText('Haaland')).toBeVisible();
+});
+
+test('player detail panel shows stats @smoke', async ({ page }) => {
+  await page.goto('/players?selected=1');
+  await expect(page.getByText('Player details: Haaland')).toBeVisible();
+  await expect(page.getByText('Goals')).toBeVisible();
+  await expect(page.getByText('xG', { exact: true })).toBeVisible();
 });
 
 test('teams list to detail flow @smoke', async ({ page }) => {

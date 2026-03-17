@@ -62,6 +62,38 @@ function mapPlayer(item) {
     form: asString(item.form),
     totalPoints: asNumber(item.total_points ?? item.totalPoints),
     status: asString(item.status) || 'unknown',
+    // Season stats
+    goals: asNumber(item.goals_scored),
+    assists: asNumber(item.assists),
+    minutes: asNumber(item.minutes),
+    cleanSheets: asNumber(item.clean_sheets),
+    yellowCards: asNumber(item.yellow_cards),
+    redCards: asNumber(item.red_cards),
+    bps: asNumber(item.bps),
+    bonusPoints: asNumber(item.bonus),
+    // ICT Index
+    influence: asString(item.influence),
+    creativity: asString(item.creativity),
+    threat: asString(item.threat),
+    ictIndex: asString(item.ict_index),
+    influenceRank: asNumber(item.influence_rank),
+    creativityRank: asNumber(item.creativity_rank),
+    threatRank: asNumber(item.threat_rank),
+    ictIndexRank: asNumber(item.ict_index_rank),
+    // xG
+    expectedGoals: asString(item.expected_goals),
+    expectedAssists: asString(item.expected_assists),
+    expectedGoalInvolvements: asString(item.expected_goal_involvements),
+    // Price
+    costChangeEvent: asNumber(item.cost_change_event),
+    costChangeStart: asNumber(item.cost_change_start),
+    // Availability
+    news: asString(item.news),
+    chanceOfPlayingThisRound: asNumber(item.chance_of_playing_this_round),
+    chanceOfPlayingNextRound: asNumber(item.chance_of_playing_next_round),
+    // Transfers
+    transfersInEvent: asNumber(item.transfers_in_event),
+    transfersOutEvent: asNumber(item.transfers_out_event),
   };
 }
 

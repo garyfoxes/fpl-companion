@@ -32,15 +32,6 @@ Use these skills (under `.github/skills/`) for detailed procedures:
 
 1. Keep diffs minimal; no drive-by refactors.
 2. Follow existing patterns in `apps/api` and `apps/web`.
-3. Add tests as part of the change (no "TODO tests").
-4. Update docs only when directly affected (README.md for scripts/env vars/architecture; AGENTS.md for new conventions/guardrails).
-
-## PR Creation
-
-When creating a PR with `gh pr create`, always supply an explicit `--body` that follows
-`.github/pull_request_template.md` exactly (all sections: Summary, Linked Issue,
-Screenshots, How To Test with checkboxes, Risk Assessment, Reviewer Checklist).
-Never use `--fill` — it ignores the template and populates from commit messages only.
 
 ## Before Finishing
 
