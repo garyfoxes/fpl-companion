@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/.vscode/start-mcp-chrome.sh",
+      "args": ["--autoConnect"],
+      "env": {
+        "CDP_URL": "http://localhost:9222"
+      }
+    }
+  }
+}

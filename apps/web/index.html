@@ -4,6 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FPL Companion</title>
+    <style>
+      #root:empty {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #root:empty::after {
+        content: '';
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e0e0e0;
+        border-top-color: #1976d2;
+        border-radius: 50%;
+        animation: fpl-spin 0.8s linear infinite;
+      }
+      @keyframes fpl-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #root:empty::after {
+          animation: none;
+          border-top-color: #1976d2;
+          opacity: 0.6;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

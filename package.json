@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace apps/api\" \"npm run dev --workspace apps/web\"",
     "build": "npm run build --workspaces --if-present",
-    "preview": "npm run preview --workspace apps/web",
+    "preview": "concurrently \"npm run start --workspace apps/api\" \"npm run preview --workspace apps/web\"",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:e2e:smoke": "npm run test:e2e:smoke --workspace apps/web",
