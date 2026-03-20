@@ -169,6 +169,10 @@ describe('PlayersPage', () => {
     const mocks = [
       { request: { query: TEAMS_QUERY }, result: { data: { teams: [] } } },
       makePlayersMock(defaultVars, [basePlayer, player2]),
+      {
+        request: { query: PLAYERS_BY_IDS_QUERY, variables: { ids: [1, 2] } },
+        result: { data: { playersByIds: [] } },
+      },
     ];
 
     renderWithProviders(<PlayersPage />, { mocks, route: '/players' });
