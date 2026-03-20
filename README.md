@@ -123,7 +123,7 @@ A `RedisCacheAdapter` stub exists for future use, but the MVP uses the in-memory
 - Node.js 18.18+ (Node 20 recommended)
 - npm 9+
 - **MCP servers** (optional, for AI agent browser testing — both configured in `.vscode/mcp.json`):
-  - **Playwright MCP**: runs via `npx @playwright/mcp` — no manual install needed; `npx` fetches the package automatically on first use. Node 20.19.0+ required.
+  - **Playwright MCP**: runs via the repo's `.vscode/start-mcp-playwright.sh` wrapper, which activates the `.nvmrc` Node version and then launches `npx -y @playwright/mcp`. No manual install needed; `npx` fetches the package automatically on first use. Node 20.19.0+ required.
   - **Chrome DevTools MCP**: Node 20.19.0+ required. `.nvmrc` pins this version — run `nvm install` or `fnm install` once to activate it.
 
 ### 2) Install
