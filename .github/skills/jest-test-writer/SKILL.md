@@ -47,6 +47,16 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 
 - `setupTests.js` bootstraps `@testing-library/jest-dom`.
 - `testUtils.jsx` provides a `renderWithProviders` wrapper (Apollo MockedProvider + MemoryRouter). Use it for every component test.
+- `@testing-library/user-event` is installed as a devDependency — use it for interaction tests (clicks, typing) instead of `fireEvent`. Always call `userEvent.setup()` per test rather than the deprecated global `userEvent`:
+
+  ```javascript
+  import userEvent from '@testing-library/user-event';
+  it('handles click', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<MyComponent />);
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+  });
+  ```
 
 ### Component / Page tests
 

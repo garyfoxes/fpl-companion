@@ -201,6 +201,15 @@ npm run preview
 
 The preview server (`vite preview`) serves the pre-built `apps/web/dist/` as a static site — no HMR, no dev transforms. Use this for accurate Lighthouse measurements instead of the dev server.
 
+## Frontend Features
+
+| Page      | Features                                                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Players   | Sortable columns (Total Points, Form, Price); player comparison panel (select up to 3 via checkbox, state in URL `?compare=1,2,3`) |
+| Fixtures  | FDR (Fixture Difficulty Rating) colour chips in H Diff / A Diff columns                                                            |
+| Teams     | Detail panel includes W/D/L, Points, and all six FPL strength ratings                                                              |
+| Dashboard | "Top Scorers this Gameweek" and "Most Transferred In" cards                                                                        |
+
 ## Frontend Architecture
 
 ### Code splitting
@@ -230,12 +239,13 @@ docker compose up --build
 
 `Query` supports:
 
-- `players(search, teamId, position, limit, offset)`
+- `players(search, teamId, position, orderBy: PlayerOrderBy, limit, offset)` — `orderBy` accepts `{ field: PlayerOrderField, direction: SortDirection }` to server-side sort by `totalPoints`, `form`, `nowCost`, or `transfersInEvent`
 - `player(id)`
+- `playersByIds(ids: [Int!]!)` — batch fetch up to 10 players by ID; de-duplicates IDs server-side
 - `teams(orderBy, first, limit, offset)`
 - `teamsConnection(orderBy, first, offset)`
-- `team(id)`
-- `fixtures(eventId, teamId, finished, limit, offset)`
+- `team(id)` — includes W/D/L, points, and all six FPL strength ratings
+- `fixtures(eventId, teamId, finished, limit, offset)` — response includes `teamHDifficulty` / `teamADifficulty` (FDR 1–5)
 - `fixture(id)`
 - `events`
 - `event(id)`

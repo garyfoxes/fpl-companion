@@ -69,6 +69,8 @@ Out of scope for MVP:
 - Prefer small, composable helpers for filtering/pagination/state parsing.
 - Keep UI responsive and accessible (labels, semantic table headings, alerts).
 - Never duplicate exported names in the same file; ESLint treats redeclared bindings as a hard error.
+- For resolvers that accept an array argument (`ids`, etc.), always de-duplicate the input and enforce a reasonable maximum length before issuing upstream calls. Exceed-limit errors must use `extensions.code: 'BAD_USER_INPUT'` and throw before any I/O.
+- ESLint rules added to `eslint.config.js` must be verified as core rules (no plugin prefix) before committing. Plugin rules (e.g. `prefer-optional-chain` from `@typescript-eslint`) require the plugin to be installed and declared; core-only rules that are not available will throw a hard `TypeError` at lint time.
 
 ## GraphQL And Error Contract
 
