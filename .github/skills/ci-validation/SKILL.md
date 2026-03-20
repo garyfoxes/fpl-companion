@@ -19,6 +19,16 @@ npm run test          # 3. Jest — unit + integration across all workspaces
 npm run test:e2e:smoke # 4. Playwright — smoke tests for apps/web
 ```
 
+### Step 3 — Console Noise Check (MANDATORY)
+
+After `npm run test` passes, verify the output contains **zero** `console.warn` or `console.error` lines. Do NOT pipe through `tail` — that hides noise above the summary. Run:
+
+```sh
+npm run test 2>&1 | grep -c 'console\.\(warn\|error\)$'
+```
+
+The result must be `0`. If non-zero, see **jest-test-writer SKILL → Test Environment Hygiene** for remediation.
+
 ## CI Parity Notes
 
 - CI runs on **Node 20** with `npm ci` (not `npm install`).
