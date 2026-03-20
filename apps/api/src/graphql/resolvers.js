@@ -2,7 +2,7 @@ const { GraphQLError } = require('graphql');
 const { UpstreamError } = require('../errors/upstreamErrors');
 const { filterPlayers, filterFixtures } = require('../utils/filter');
 const { paginate } = require('../utils/paginate');
-const { sortTeams } = require('../utils/sort');
+const { sortTeams, sortPlayers } = require('../utils/sort');
 
 const TEAM_ALIAS_FIELDS = {
   short_name: 'shortName',
@@ -45,7 +45,8 @@ const resolvers = {
       try {
         const players = await context.dataSource.listPlayers();
         const filtered = filterPlayers(players, args);
-        return paginate(filtered, args.limit, args.offset);
+        const sorted = sortPlayers(filtered, args.orderBy);
+        return paginate(sorted, args.limit, args.offset);
       } catch (error) {
         throw toGraphQLError(error);
       }
@@ -54,6 +55,17 @@ const resolvers = {
     player: async (_parent, args, context) => {
       try {
         return context.dataSource.getPlayerById(args.id);
+      } catch (error) {
+        throw toGraphQLError(error);
+      }
+    },
+
+    playersByIds: async (_parent, args, context) => {
+      try {
+        const results = await Promise.all(
+          args.ids.map((id) => context.dataSource.getPlayerById(id))
+        );
+        return results.filter(Boolean);
       } catch (error) {
         throw toGraphQLError(error);
       }

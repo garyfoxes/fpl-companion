@@ -55,6 +55,22 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 - **Empty state**: Mock a query that returns an empty list → assert an appropriate empty message.
 - **Happy path**: Mock a query with representative data → assert key data renders in the DOM.
 
+### Apollo MockedProvider variable matching
+
+Apollo's `MockedProvider` performs **exact deep equality** on `variables`. Every variable the component sends — including optional ones that resolve to `null` — must be present in the mock's `request.variables`. Missing or extra keys cause the mock to silently not fire, leaving the component stuck in loading state.
+
+- When a query gains a new optional variable (e.g. `orderBy`), update **every existing mock** for that query to include the new key, even when its value is `null`.
+- When writing a new mock, inspect the component's `useQuery` call directly to enumerate all variables it sends.
+- If tests hang on `findByText` with no error, the first thing to check is a variable mismatch in the mock.
+
+```javascript
+// BAD — missing orderBy — mock will never fire after orderBy was added to PLAYERS_QUERY
+{ request: { query: PLAYERS_QUERY, variables: { search: null, teamId: null, limit: 200, offset: 0 } } }
+
+// GOOD
+{ request: { query: PLAYERS_QUERY, variables: { search: null, teamId: null, orderBy: null, limit: 200, offset: 0 } } }
+```
+
 ### URL-filter persistence tests (`urlState.test.js`)
 
 - Test that `syncFiltersToUrl` / `readFiltersFromUrl` round-trip correctly.

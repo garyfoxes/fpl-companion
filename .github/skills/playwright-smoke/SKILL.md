@@ -82,6 +82,23 @@ When new fields are added to a GraphQL type:
 
 Omitting fields from fixture objects doesn't cause test failures immediately — it causes silent `undefined` values that may mask regressions.
 
+## Adding a New Query to an Existing Page
+
+When a new GraphQL query is added to an existing page (not a whole new entity), `responseFor` needs a new `case` for that operation name. This is easy to miss because the existing page tests don't break — the new query just silently returns `{ data: {} }`.
+
+Example: adding `playersByIds` for a comparison panel on the Players page:
+
+```javascript
+case 'PlayersByIds':
+  return {
+    data: {
+      playersByIds: players.filter((p) => (variables?.ids || []).includes(p.id)),
+    },
+  };
+```
+
+Check `apps/web/src/lib/queries.js` for the operation name (the string after `query`) and ensure a matching `case` exists in `responseFor` before writing smoke assertions that depend on it.
+
 ## API-Down Error State
 
 One global error state test covers all routes. It lives at the bottom of `smoke.spec.js`:

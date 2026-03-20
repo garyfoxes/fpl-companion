@@ -68,6 +68,7 @@ Out of scope for MVP:
 - Avoid hidden mutations and avoid broad catch blocks without rethrow/mapping.
 - Prefer small, composable helpers for filtering/pagination/state parsing.
 - Keep UI responsive and accessible (labels, semantic table headings, alerts).
+- Never duplicate exported names in the same file; ESLint treats redeclared bindings as a hard error.
 
 ## GraphQL And Error Contract
 

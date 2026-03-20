@@ -6,10 +6,12 @@ const typeDefs = gql`
       search: String
       teamId: Int
       position: String
+      orderBy: PlayerOrderBy
       limit: Int = 50
       offset: Int = 0
     ): [Player!]!
     player(id: Int!): Player
+    playersByIds(ids: [Int!]!): [Player!]!
     teams(orderBy: TeamOrderBy, first: Int, limit: Int = 50, offset: Int = 0): [Team!]!
     teamsConnection(orderBy: TeamOrderBy, first: Int = 50, offset: Int = 0): TeamConnection!
     team(id: Int!): Team
@@ -28,6 +30,18 @@ const typeDefs = gql`
   enum SortDirection {
     ASC
     DESC
+  }
+
+  enum PlayerOrderField {
+    totalPoints
+    form
+    nowCost
+    transfersInEvent
+  }
+
+  input PlayerOrderBy {
+    field: PlayerOrderField!
+    direction: SortDirection!
   }
 
   enum TeamOrderField {

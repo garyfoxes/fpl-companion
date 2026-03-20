@@ -32,6 +32,7 @@ Use these skills (under `.github/skills/`) for detailed procedures:
 
 1. Keep diffs minimal; no drive-by refactors.
 2. Follow existing patterns in `apps/api` and `apps/web`.
+3. After editing any file, verify it has no duplicate exported names and no orphaned code outside function/class scope before running CI. Duplicate exports and top-level orphaned statements cause hard parse failures that only appear at lint time.
 
 ## Before Finishing
 

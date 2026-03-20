@@ -32,6 +32,7 @@ Use this skill when reviewing code changes. Each section below maps to a guardra
 - **API Jest**: resolvers, data sources, mapper normalization, invalid payload handling.
 - **Web Jest**: loading/error/empty states, route smoke, URL-filter persistence where relevant.
 - **Playwright smoke**: API-down handling and route/page smoke when user flows change.
+- **Apollo mock variable shapes**: when a query gains a new variable (e.g. an optional `orderBy`), every existing mock for that query must include the new key — even with a `null` value. A missing key causes the mock to silently not fire. Flag any test that added a variable to a query document without updating all existing mocks for that query as a **High** finding.
 - No "TODO: add tests" — tests ship with the change.
 
 ### 5. CI Fit

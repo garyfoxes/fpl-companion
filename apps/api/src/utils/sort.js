@@ -42,7 +42,7 @@ function compareValues(a, b, direction) {
 }
 
 function sortTeams(teams, orderBy) {
-  if (!orderBy || !orderBy.field) {
+  if (!orderBy?.field) {
     return teams;
   }
 
@@ -55,6 +55,40 @@ function sortTeams(teams, orderBy) {
   return [...teams].sort((left, right) => compareValues(left[key], right[key], direction));
 }
 
+const PLAYER_ORDER_FIELD_TO_KEY = {
+  totalPoints: 'totalPoints',
+  form: 'form',
+  nowCost: 'nowCost',
+  transfersInEvent: 'transfersInEvent',
+};
+
+function sortPlayers(players, orderBy) {
+  if (!orderBy?.field) {
+    return players;
+  }
+
+  const key = PLAYER_ORDER_FIELD_TO_KEY[orderBy.field];
+  if (!key) {
+    return players;
+  }
+
+  const direction = orderBy.direction || 'ASC';
+
+  return [...players].sort((left, right) => {
+    let a = left[key];
+    let b = right[key];
+
+    // form is a decimal string like "8.1" — parse for correct numeric comparison
+    if (key === 'form') {
+      a = a !== null && a !== undefined ? Number.parseFloat(a) : null;
+      b = b !== null && b !== undefined ? Number.parseFloat(b) : null;
+    }
+
+    return compareValues(a, b, direction);
+  });
+}
+
 module.exports = {
   sortTeams,
+  sortPlayers,
 };
