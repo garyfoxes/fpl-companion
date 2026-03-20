@@ -2,7 +2,9 @@ const { GraphQLError } = require('graphql');
 const { UpstreamError } = require('../errors/upstreamErrors');
 const { filterPlayers, filterFixtures } = require('../utils/filter');
 const { paginate } = require('../utils/paginate');
-const { sortTeams } = require('../utils/sort');
+const { sortTeams, sortPlayers } = require('../utils/sort');
+
+const MAX_PLAYERIDS_PER_QUERY = 10;
 
 const TEAM_ALIAS_FIELDS = {
   short_name: 'shortName',
@@ -45,7 +47,8 @@ const resolvers = {
       try {
         const players = await context.dataSource.listPlayers();
         const filtered = filterPlayers(players, args);
-        return paginate(filtered, args.limit, args.offset);
+        const sorted = sortPlayers(filtered, args.orderBy);
+        return paginate(sorted, args.limit, args.offset);
       } catch (error) {
         throw toGraphQLError(error);
       }
@@ -54,6 +57,23 @@ const resolvers = {
     player: async (_parent, args, context) => {
       try {
         return context.dataSource.getPlayerById(args.id);
+      } catch (error) {
+        throw toGraphQLError(error);
+      }
+    },
+
+    playersByIds: async (_parent, args, context) => {
+      const ids = [...new Set(args.ids)];
+      if (ids.length > MAX_PLAYERIDS_PER_QUERY) {
+        throw new GraphQLError(
+          `playersByIds accepts at most ${MAX_PLAYERIDS_PER_QUERY} IDs per request`,
+          { extensions: { code: 'BAD_USER_INPUT' } }
+        );
+      }
+      try {
+        const players = await context.dataSource.listPlayers();
+        const idSet = new Set(ids);
+        return players.filter((p) => idSet.has(p.id));
       } catch (error) {
         throw toGraphQLError(error);
       }

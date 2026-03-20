@@ -103,6 +103,30 @@ export function TeamsPage() {
             { label: 'Strength', value: detailQuery.data.team.strength },
             { label: 'Form', value: detailQuery.data.team.form },
             { label: 'Position', value: detailQuery.data.team.position },
+            {
+              label: 'Played',
+              value:
+                detailQuery.data.team.win !== null &&
+                detailQuery.data.team.win !== undefined &&
+                detailQuery.data.team.draw !== null &&
+                detailQuery.data.team.draw !== undefined &&
+                detailQuery.data.team.loss !== null &&
+                detailQuery.data.team.loss !== undefined
+                  ? detailQuery.data.team.win +
+                    detailQuery.data.team.draw +
+                    detailQuery.data.team.loss
+                  : null,
+            },
+            { label: 'Win', value: detailQuery.data.team.win },
+            { label: 'Draw', value: detailQuery.data.team.draw },
+            { label: 'Loss', value: detailQuery.data.team.loss },
+            { label: 'Points', value: detailQuery.data.team.points },
+            { label: 'Strength Overall (H)', value: detailQuery.data.team.strengthOverallHome },
+            { label: 'Strength Overall (A)', value: detailQuery.data.team.strengthOverallAway },
+            { label: 'Strength Attack (H)', value: detailQuery.data.team.strengthAttackHome },
+            { label: 'Strength Attack (A)', value: detailQuery.data.team.strengthAttackAway },
+            { label: 'Strength Defence (H)', value: detailQuery.data.team.strengthDefenceHome },
+            { label: 'Strength Defence (A)', value: detailQuery.data.team.strengthDefenceAway },
           ]}
         />
       ) : null}

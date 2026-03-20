@@ -82,8 +82,42 @@ const players = [
 ];
 
 const teams = [
-  { id: 1, name: 'Man City', shortName: 'MCI', strength: 5, form: 'W', position: 1 },
-  { id: 2, name: 'Arsenal', shortName: 'ARS', strength: 4, form: 'W', position: 2 },
+  {
+    id: 1,
+    name: 'Man City',
+    shortName: 'MCI',
+    strength: 5,
+    form: 'W',
+    position: 1,
+    win: 20,
+    draw: 5,
+    loss: 5,
+    points: 65,
+    strengthOverallHome: 1280,
+    strengthOverallAway: 1250,
+    strengthAttackHome: 1350,
+    strengthAttackAway: 1300,
+    strengthDefenceHome: 1210,
+    strengthDefenceAway: 1200,
+  },
+  {
+    id: 2,
+    name: 'Arsenal',
+    shortName: 'ARS',
+    strength: 4,
+    form: 'W',
+    position: 2,
+    win: 18,
+    draw: 6,
+    loss: 6,
+    points: 60,
+    strengthOverallHome: 1230,
+    strengthOverallAway: 1200,
+    strengthAttackHome: 1280,
+    strengthAttackAway: 1250,
+    strengthDefenceHome: 1180,
+    strengthDefenceAway: 1160,
+  },
 ];
 
 const fixtures = [
@@ -132,10 +166,7 @@ function responseFor(operationName, variables) {
         data: {
           players: players.filter((player) => {
             const search = variables?.search?.toLowerCase() || '';
-            if (search && !player.webName.toLowerCase().includes(search)) {
-              return false;
-            }
-            return true;
+            return !(search && !player.webName.toLowerCase().includes(search));
           }),
         },
       };
@@ -175,6 +206,12 @@ function responseFor(operationName, variables) {
       return {
         data: {
           fixture: fixtures.find((fixture) => fixture.id === variables.id) || null,
+        },
+      };
+    case 'PlayersByIds':
+      return {
+        data: {
+          playersByIds: players.filter((p) => (variables?.ids || []).includes(p.id)),
         },
       };
     case 'Events':
@@ -220,6 +257,8 @@ test('teams list to detail flow @smoke', async ({ page }) => {
   await page.goto('/teams');
   await page.getByText('Arsenal').click();
   await expect(page.getByText('Team details: Arsenal')).toBeVisible();
+  await expect(page.getByText('Win')).toBeVisible();
+  await expect(page.getByText('Strength Attack (H)')).toBeVisible();
 });
 
 test('fixtures filter by gameweek @smoke', async ({ page }) => {
@@ -252,4 +291,25 @@ test('api-down error state @smoke', async ({ page }) => {
 
   await page.goto('/events');
   await expect(page.getByRole('alert')).toContainText('Unable to load data');
+});
+
+test('dashboard gameweek widgets @smoke', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Top Total Points')).toBeVisible();
+  await expect(page.getByText('Most Transferred In')).toBeVisible();
+  await expect(page.getByText(/Haaland/).first()).toBeVisible();
+});
+
+test('players column sort updates aria-sort @smoke', async ({ page }) => {
+  await page.goto('/players');
+  await expect(page.getByText('Haaland')).toBeVisible();
+  await page.getByRole('button', { name: /total points/i }).click();
+  await expect(page.locator('[aria-sort="descending"]').first()).toBeVisible();
+});
+
+test('player comparison panel shows two players @smoke', async ({ page }) => {
+  await page.goto('/players?compare=1,2');
+  await expect(page.getByText('Player Comparison')).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Haaland' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Saka' })).toBeVisible();
 });

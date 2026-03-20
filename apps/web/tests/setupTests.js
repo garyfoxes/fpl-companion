@@ -8,10 +8,11 @@ import '@testing-library/jest-dom';
 // message code 104 (the "removed option" deprecation class) so the filter is
 // tight and does not suppress unrelated Apollo errors (e.g. message 13 = missing
 // field, which should surface as a real test failure signal).
+// Message 49 is the MockLink `onError` deprecation warning — also framework noise.
 const apolloNoise = (...args) =>
   typeof args[0] === 'string' &&
   args[0].includes('go.apollo.dev/c/err') &&
-  args[0].includes('%22message%22%3A104');
+  (args[0].includes('%22message%22%3A104') || args[0].includes('%22message%22%3A49'));
 
 const originalWarn = console.warn;
 const originalError = console.error;

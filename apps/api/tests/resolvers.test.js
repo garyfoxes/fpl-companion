@@ -125,4 +125,88 @@ describe('resolvers', () => {
       )
     ).rejects.toMatchObject({ extensions: { code: 'UPSTREAM_UNAVAILABLE' } });
   });
+
+  it('sorts players by totalPoints DESC via orderBy arg', async () => {
+    const ctx = {
+      dataSource: {
+        listPlayers: jest.fn().mockResolvedValue([
+          {
+            id: 1,
+            webName: 'Haaland',
+            firstName: 'Erling',
+            lastName: 'Haaland',
+            teamId: 1,
+            position: 'FWD',
+            totalPoints: 210,
+            form: '8.1',
+            nowCost: 14,
+          },
+          {
+            id: 2,
+            webName: 'Saka',
+            firstName: 'Bukayo',
+            lastName: 'Saka',
+            teamId: 2,
+            position: 'MID',
+            totalPoints: 180,
+            form: '7.2',
+            nowCost: 10,
+          },
+        ]),
+      },
+    };
+    const result = await resolvers.Query.players(
+      null,
+      { limit: 10, offset: 0, orderBy: { field: 'totalPoints', direction: 'DESC' } },
+      ctx
+    );
+    expect(result[0].id).toBe(1);
+    expect(result[1].id).toBe(2);
+  });
+
+  it('playersByIds returns both players', async () => {
+    const ctx = {
+      dataSource: {
+        listPlayers: jest.fn().mockResolvedValue([
+          { id: 1, webName: 'Haaland' },
+          { id: 2, webName: 'Saka' },
+          { id: 3, webName: 'Palmer' },
+        ]),
+      },
+    };
+    const result = await resolvers.Query.playersByIds(null, { ids: [1, 2] }, ctx);
+    expect(result).toHaveLength(2);
+    expect(result.map((p) => p.id)).toEqual([1, 2]);
+  });
+
+  it('playersByIds filters out ids not in the list', async () => {
+    const ctx = {
+      dataSource: {
+        listPlayers: jest.fn().mockResolvedValue([{ id: 1, webName: 'Haaland' }]),
+      },
+    };
+    const result = await resolvers.Query.playersByIds(null, { ids: [1, 999] }, ctx);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(1);
+  });
+
+  it('playersByIds de-duplicates ids before filtering', async () => {
+    const ctx = {
+      dataSource: {
+        listPlayers: jest.fn().mockResolvedValue([{ id: 1, webName: 'Haaland' }]),
+      },
+    };
+    const result = await resolvers.Query.playersByIds(null, { ids: [1, 1, 1] }, ctx);
+    expect(ctx.dataSource.listPlayers).toHaveBeenCalledTimes(1);
+    expect(result).toHaveLength(1);
+  });
+
+  it('playersByIds throws BAD_USER_INPUT when more than 10 ids are provided', async () => {
+    const ctx = { dataSource: { listPlayers: jest.fn() } };
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    await expect(resolvers.Query.playersByIds(null, { ids }, ctx)).rejects.toMatchObject({
+      extensions: { code: 'BAD_USER_INPUT' },
+    });
+    expect(ctx.dataSource.listPlayers).not.toHaveBeenCalled();
+  });
 });

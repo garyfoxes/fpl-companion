@@ -8,6 +8,20 @@ export function readIntParam(searchParams, key) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+export function readIntArrayParam(searchParams, key) {
+  const raw = searchParams.get(key);
+  if (!raw) {
+    return [];
+  }
+
+  return raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => /^\d+$/.test(s))
+    .map((s) => Number.parseInt(s, 10))
+    .filter((n) => n > 0);
+}
+
 export function readBooleanParam(searchParams, key) {
   const raw = searchParams.get(key);
   if (raw === 'true') {

@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/client';
 import {
+  Button,
   Card,
   CardContent,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,16 +15,29 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   TextField,
   Typography,
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import { ComparisonPanel } from '../components/ComparisonPanel';
 import { DetailPanel } from '../components/DetailPanel';
 import { PageState } from '../components/PageState';
-import { PLAYER_QUERY, PLAYERS_QUERY, TEAMS_QUERY } from '../lib/queries';
-import { readIntParam, setParam } from '../utils/urlState';
+import { PLAYER_QUERY, PLAYERS_BY_IDS_QUERY, PLAYERS_QUERY, TEAMS_QUERY } from '../lib/queries';
+import { readIntArrayParam, readIntParam, setParam } from '../utils/urlState';
 
 const POSITION_OPTIONS = ['GKP', 'DEF', 'MID', 'FWD'];
+const SORT_ALLOWLIST = new Set(['totalPoints', 'form', 'nowCost']);
+
+function formatTransfers(player) {
+  if (player.transfersInEvent === null || player.transfersInEvent === undefined) return 'N/A';
+  const inStr = `\u2191${player.transfersInEvent.toLocaleString()}`;
+  const outStr =
+    player.transfersOutEvent !== null && player.transfersOutEvent !== undefined
+      ? ` / \u2193${player.transfersOutEvent.toLocaleString()}`
+      : '';
+  return `${inStr}${outStr}`;
+}
 
 export function PlayersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,12 +46,24 @@ export function PlayersPage() {
   const search = searchParams.get('q') || '';
   const teamId = readIntParam(searchParams, 'teamId');
   const position = searchParams.get('position') || '';
+  const sortField = SORT_ALLOWLIST.has(searchParams.get('sortField'))
+    ? searchParams.get('sortField')
+    : null;
+  const sortDir = searchParams.get('sortDir') || 'DESC';
+
+  const sortDirection = sortDir.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+  const sortDirLower = sortDirection.toLowerCase();
+  const orderBy = sortField ? { field: sortField, direction: sortDirection } : null;
+
+  const rawCompareIds = readIntArrayParam(searchParams, 'compare');
+  const compareIds = [...new Set(rawCompareIds)].slice(0, 3);
 
   const { data, loading, error } = useQuery(PLAYERS_QUERY, {
     variables: {
       search: search || null,
       teamId,
       position: position || null,
+      orderBy,
       limit: 200,
       offset: 0,
     },
@@ -49,8 +76,15 @@ export function PlayersPage() {
     skip: !selectedId,
   });
 
+  const compareQuery = useQuery(PLAYERS_BY_IDS_QUERY, {
+    variables: { ids: compareIds },
+    skip: compareIds.length < 2,
+  });
+
   const players = data?.players || [];
   const teamMap = Object.fromEntries((teamsQuery.data?.teams || []).map((t) => [t.id, t]));
+  const comparePlayers = compareQuery.data?.playersByIds || [];
+  const showComparison = compareIds.length >= 2;
 
   function updateFilter(key, value) {
     let next = setParam(searchParams, key, value);
@@ -60,6 +94,35 @@ export function PlayersPage() {
 
   function selectPlayer(id) {
     const next = setParam(searchParams, 'selected', id);
+    setSearchParams(next, { replace: true });
+  }
+
+  function handleSortClick(field) {
+    let next;
+    if (sortField === field) {
+      const newDir = sortDir.toUpperCase() === 'ASC' ? 'DESC' : 'ASC';
+      next = setParam(searchParams, 'sortDir', newDir);
+    } else {
+      next = setParam(searchParams, 'sortField', field);
+      next = setParam(next, 'sortDir', 'DESC');
+    }
+    next = setParam(next, 'selected', null);
+    setSearchParams(next, { replace: true });
+  }
+
+  function toggleCompare(id) {
+    const ids = new Set(compareIds);
+    if (ids.has(id)) {
+      ids.delete(id);
+    } else if (ids.size < 3) {
+      ids.add(id);
+    }
+    const next = setParam(searchParams, 'compare', ids.size > 0 ? [...ids].join(',') : null);
+    setSearchParams(next, { replace: true });
+  }
+
+  function clearComparison() {
+    const next = setParam(searchParams, 'compare', null);
     setSearchParams(next, { replace: true });
   }
 
@@ -114,6 +177,16 @@ export function PlayersPage() {
         </CardContent>
       </Card>
 
+      {compareIds.length >= 2 && (
+        <Button variant="outlined" onClick={clearComparison} sx={{ alignSelf: 'flex-start' }}>
+          Clear comparison ({compareIds.length})
+        </Button>
+      )}
+
+      {showComparison && comparePlayers.length >= 2 && (
+        <ComparisonPanel players={comparePlayers} onClose={clearComparison} />
+      )}
+
       <PageState
         loading={loading || teamsQuery.loading}
         error={error || teamsQuery.error}
@@ -124,11 +197,37 @@ export function PlayersPage() {
           <Table size="small">
             <TableHead>
               <TableRow>
+                <TableCell padding="checkbox" />
                 <TableCell>Name</TableCell>
                 <TableCell>Position</TableCell>
                 <TableCell>Team</TableCell>
-                <TableCell>Total Points</TableCell>
-                <TableCell>Form</TableCell>
+                <TableCell sortDirection={sortField === 'totalPoints' ? sortDirLower : false}>
+                  <TableSortLabel
+                    active={sortField === 'totalPoints'}
+                    direction={sortField === 'totalPoints' ? sortDirLower : 'desc'}
+                    onClick={() => handleSortClick('totalPoints')}
+                  >
+                    Total Points
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sortDirection={sortField === 'form' ? sortDirLower : false}>
+                  <TableSortLabel
+                    active={sortField === 'form'}
+                    direction={sortField === 'form' ? sortDirLower : 'desc'}
+                    onClick={() => handleSortClick('form')}
+                  >
+                    Form
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sortDirection={sortField === 'nowCost' ? sortDirLower : false}>
+                  <TableSortLabel
+                    active={sortField === 'nowCost'}
+                    direction={sortField === 'nowCost' ? sortDirLower : 'desc'}
+                    onClick={() => handleSortClick('nowCost')}
+                  >
+                    Price
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell>Transfers (GW)</TableCell>
               </TableRow>
             </TableHead>
@@ -141,6 +240,14 @@ export function PlayersPage() {
                   selected={player.id === selectedId}
                   sx={{ cursor: 'pointer' }}
                 >
+                  <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={compareIds.includes(player.id)}
+                      size="small"
+                      onChange={() => toggleCompare(player.id)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </TableCell>
                   <TableCell>{player.webName}</TableCell>
                   <TableCell>{player.position}</TableCell>
                   <TableCell>
@@ -151,11 +258,8 @@ export function PlayersPage() {
                   </TableCell>
                   <TableCell>{player.totalPoints ?? 'N/A'}</TableCell>
                   <TableCell>{player.form ?? 'N/A'}</TableCell>
-                  <TableCell>
-                    {player.transfersInEvent !== null && player.transfersInEvent !== undefined
-                      ? `↑${player.transfersInEvent.toLocaleString()}${player.transfersOutEvent !== null && player.transfersOutEvent !== undefined ? ` / ↓${player.transfersOutEvent.toLocaleString()}` : ''}`
-                      : 'N/A'}
-                  </TableCell>
+                  <TableCell>{player.nowCost ?? 'N/A'}</TableCell>
+                  <TableCell>{formatTransfers(player)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

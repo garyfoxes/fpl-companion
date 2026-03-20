@@ -1,6 +1,6 @@
 const reactPlugin = require('eslint-plugin-react');
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 module.exports = [
   {
     files: ['**/*.{js,jsx}'],
@@ -46,6 +46,8 @@ module.exports = [
       ],
       eqeqeq: ['error', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error', 'log'] }],
+      'no-nested-ternary': 'error',
+      'no-negated-condition': 'error',
     },
   },
 ];

@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import {
+  Box,
   Card,
   CardContent,
   FormControl,
@@ -21,6 +22,39 @@ import { PageState } from '../components/PageState';
 import { EVENTS_QUERY, FIXTURE_QUERY, FIXTURES_QUERY, TEAMS_QUERY } from '../lib/queries';
 import { formatDate } from '../utils/formatDate';
 import { readBooleanParam, readIntParam, setParam } from '../utils/urlState';
+
+const FDR_COLORS = {
+  1: '#257d5a',
+  2: '#00ff87',
+  3: '#ebebe4',
+  4: '#ff005a',
+  5: '#80072d',
+};
+
+function DifficultyChip({ value }) {
+  if (value === null || value === undefined) return <>–</>;
+  const bg = FDR_COLORS[value] || '#ebebe4';
+  const dark = value >= 4 || value <= 1;
+  return (
+    <Box
+      component="span"
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 28,
+        height: 22,
+        borderRadius: 1,
+        backgroundColor: bg,
+        color: dark ? '#fff' : '#222',
+        fontSize: '0.75rem',
+        fontWeight: 700,
+      }}
+    >
+      {value}
+    </Box>
+  );
+}
 
 export function FixturesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,10 +148,10 @@ export function FixturesPage() {
                 value={finished === null ? '' : String(finished)}
                 label="Status"
                 onChange={(event) => {
-                  if (!event.target.value) {
-                    updateFilter('finished', null);
-                  } else {
+                  if (event.target.value) {
                     updateFilter('finished', event.target.value);
+                  } else {
+                    updateFilter('finished', null);
                   }
                 }}
               >
@@ -145,6 +179,8 @@ export function FixturesPage() {
                 <TableCell>Home</TableCell>
                 <TableCell>Away</TableCell>
                 <TableCell>Score</TableCell>
+                <TableCell>H Diff</TableCell>
+                <TableCell>A Diff</TableCell>
                 <TableCell>Kickoff</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
@@ -171,6 +207,12 @@ export function FixturesPage() {
                     (fixture.teamHScore !== null || fixture.teamAScore !== null)
                       ? `${fixture.teamHScore ?? '?'} – ${fixture.teamAScore ?? '?'}`
                       : '–'}
+                  </TableCell>
+                  <TableCell>
+                    <DifficultyChip value={fixture.teamHDifficulty} />
+                  </TableCell>
+                  <TableCell>
+                    <DifficultyChip value={fixture.teamADifficulty} />
                   </TableCell>
                   <TableCell>{formatDate(fixture.kickoffTime)}</TableCell>
                   <TableCell>{fixture.finished ? 'Finished' : 'Not finished'}</TableCell>

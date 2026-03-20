@@ -22,6 +22,17 @@ Work through these files **in order**. Skip any step that doesn't apply to the c
 - Wire query/mutation to the data source.
 - Return data through existing filter/paginate/sort helpers in `apps/api/src/utils/` where applicable.
 - Ensure every error thrown or forwarded includes `extensions.code` per the error contract in AGENTS.md.
+- For resolvers that accept a list argument (e.g. `ids: [Int!]!`): **de-duplicate** and **cap** before issuing any upstream calls. Exceed-limit must throw a `GraphQLError` with `extensions.code: 'BAD_USER_INPUT'` and return before I/O. Example:
+
+  ```javascript
+  const MAX = 10;
+  const ids = [...new Set(args.ids)];
+  if (ids.length > MAX) {
+    throw new GraphQLError(`Accepts at most ${MAX} IDs`, {
+      extensions: { code: 'BAD_USER_INPUT' },
+    });
+  }
+  ```
 
 ### 3. Upstream Data Source (`apps/api/src/upstream/fplDataSource.js`)
 

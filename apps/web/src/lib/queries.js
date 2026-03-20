@@ -4,6 +4,9 @@ export const DASHBOARD_QUERY = gql`
   query Dashboard {
     players(limit: 1000, offset: 0) {
       id
+      webName
+      totalPoints
+      transfersInEvent
     }
     teams {
       id
@@ -22,8 +25,22 @@ export const DASHBOARD_QUERY = gql`
 `;
 
 export const PLAYERS_QUERY = gql`
-  query Players($search: String, $teamId: Int, $position: String, $limit: Int!, $offset: Int!) {
-    players(search: $search, teamId: $teamId, position: $position, limit: $limit, offset: $offset) {
+  query Players(
+    $search: String
+    $teamId: Int
+    $position: String
+    $orderBy: PlayerOrderBy
+    $limit: Int!
+    $offset: Int!
+  ) {
+    players(
+      search: $search
+      teamId: $teamId
+      position: $position
+      orderBy: $orderBy
+      limit: $limit
+      offset: $offset
+    ) {
       id
       firstName
       lastName
@@ -106,6 +123,16 @@ export const TEAM_QUERY = gql`
       strength
       form
       position
+      win
+      draw
+      loss
+      points
+      strengthOverallHome
+      strengthOverallAway
+      strengthAttackHome
+      strengthAttackAway
+      strengthDefenceHome
+      strengthDefenceAway
     }
   }
 `;
@@ -180,6 +207,26 @@ export const EVENT_QUERY = gql`
       isCurrent
       isNext
       isPrevious
+    }
+  }
+`;
+
+export const PLAYERS_BY_IDS_QUERY = gql`
+  query PlayersByIds($ids: [Int!]!) {
+    playersByIds(ids: $ids) {
+      id
+      webName
+      totalPoints
+      form
+      nowCost
+      goals
+      assists
+      cleanSheets
+      yellowCards
+      redCards
+      bonusPoints
+      bps
+      ictIndex
     }
   }
 `;

@@ -47,6 +47,16 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 
 - `setupTests.js` bootstraps `@testing-library/jest-dom`.
 - `testUtils.jsx` provides a `renderWithProviders` wrapper (Apollo MockedProvider + MemoryRouter). Use it for every component test.
+- `@testing-library/user-event` is installed as a devDependency — use it for interaction tests (clicks, typing) instead of `fireEvent`. Always call `userEvent.setup()` per test rather than the deprecated global `userEvent`:
+
+  ```javascript
+  import userEvent from '@testing-library/user-event';
+  it('handles click', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<MyComponent />);
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+  });
+  ```
 
 ### Component / Page tests
 
@@ -54,6 +64,22 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 - **Error state**: Mock a query that returns a `GraphQLError` → assert the error alert renders.
 - **Empty state**: Mock a query that returns an empty list → assert an appropriate empty message.
 - **Happy path**: Mock a query with representative data → assert key data renders in the DOM.
+
+### Apollo MockedProvider variable matching
+
+Apollo's `MockedProvider` performs **exact deep equality** on `variables`. Every variable the component sends — including optional ones that resolve to `null` — must be present in the mock's `request.variables`. Missing or extra keys cause the mock to silently not fire, leaving the component stuck in loading state.
+
+- When a query gains a new optional variable (e.g. `orderBy`), update **every existing mock** for that query to include the new key, even when its value is `null`.
+- When writing a new mock, inspect the component's `useQuery` call directly to enumerate all variables it sends.
+- If tests hang on `findByText` with no error, the first thing to check is a variable mismatch in the mock.
+
+```javascript
+// BAD — missing orderBy — mock will never fire after orderBy was added to PLAYERS_QUERY
+{ request: { query: PLAYERS_QUERY, variables: { search: null, teamId: null, limit: 200, offset: 0 } } }
+
+// GOOD
+{ request: { query: PLAYERS_QUERY, variables: { search: null, teamId: null, orderBy: null, limit: 200, offset: 0 } } }
+```
 
 ### URL-filter persistence tests (`urlState.test.js`)
 
@@ -64,6 +90,11 @@ Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Test
 
 - **Always run `npm run test` from the repo root** when checking for noise — this runs both `apps/api` and `apps/web`. Never scope to a single workspace to verify hygiene; warnings in the other workspace will be missed.
 - **`console.warn` and `console.error` noise must be addressed**, not ignored. A clean test run should produce no unexpected output so that real problems are visible.
+- **Verification command** — after tests pass, run this and confirm the count is `0`:
+  ```sh
+  npm run test 2>&1 | grep -c 'console\.\(warn\|error\)$'
+  ```
+  Do NOT use `| tail` to check test results — it hides noise above the summary. If the count is non-zero, either fix the root cause (usually incomplete mock data) or add a targeted suppression below.
 - If a framework (e.g. Apollo, MUI) emits warns or errors not caused by application code — suppress them with a targeted filter in `apps/web/tests/setupTests.js` using `beforeAll`/`afterAll`. The filter must match a unique string from that specific message (e.g. the Apollo error CDN URL `go.apollo.dev/c/err`) so it does not silence unrelated output. Apply the same filter to both `console.warn` and `console.error` when the framework uses both channels.
 - Note: Apollo's `MockedProvider` calls `console.error` when a mock's `error:` property fires (i.e. in intentional error-state tests). This is also covered by the Apollo CDN URL filter.
 - Never use a blanket `jest.spyOn(console, 'error').mockImplementation(() => {})` without a guard condition — that hides real problems.

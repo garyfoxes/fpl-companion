@@ -27,7 +27,14 @@ const baseMocks = [
   {
     request: {
       query: PLAYERS_QUERY,
-      variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
+      variables: {
+        search: null,
+        teamId: null,
+        position: null,
+        orderBy: null,
+        limit: 200,
+        offset: 0,
+      },
     },
     result: {
       data: {
@@ -85,7 +92,24 @@ const baseMocks = [
     },
     result: {
       data: {
-        team: { id: 1, name: 'Arsenal', shortName: 'ARS', strength: 4, form: null, position: 2 },
+        team: {
+          id: 1,
+          name: 'Arsenal',
+          shortName: 'ARS',
+          strength: 4,
+          form: null,
+          position: 2,
+          win: 20,
+          draw: 5,
+          loss: 3,
+          points: 65,
+          strengthOverallHome: 1350,
+          strengthOverallAway: 1300,
+          strengthAttackHome: 1370,
+          strengthAttackAway: 1310,
+          strengthDefenceHome: 1330,
+          strengthDefenceAway: 1280,
+        },
       },
     },
   },

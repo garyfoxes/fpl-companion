@@ -19,7 +19,7 @@ describe('DashboardPage', () => {
         request: { query: DASHBOARD_QUERY },
         result: {
           data: {
-            players: [{ id: 1 }],
+            players: [{ id: 1, webName: 'Haaland', totalPoints: 210, transfersInEvent: 50000 }],
             teams: [{ id: 1, name: 'Man City' }],
             fixtures: [{ id: 1 }],
             events: [
@@ -36,6 +36,9 @@ describe('DashboardPage', () => {
     expect(await screen.findByText('Current gameweek status')).toBeInTheDocument();
     expect(screen.getByText('Current: Gameweek 1')).toBeInTheDocument();
     expect(screen.getByText('Next: Gameweek 2')).toBeInTheDocument();
+    expect(await screen.findByText('Top Total Points')).toBeInTheDocument();
+    expect((await screen.findAllByText(/Haaland/)).length).toBeGreaterThan(0);
+    expect(await screen.findByText('Most Transferred In')).toBeInTheDocument();
   });
 });
 
@@ -259,6 +262,66 @@ describe('FixturesPage', () => {
     renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures' });
 
     expect(await screen.findByText('2 – 1')).toBeInTheDocument();
+  });
+
+  it('renders H Diff and A Diff columns with colored chips', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FIXTURES_QUERY,
+          variables: { eventId: null, teamId: null, finished: null, limit: 300, offset: 0 },
+        },
+        result: {
+          data: {
+            fixtures: [
+              {
+                id: 1,
+                event: 1,
+                kickoffTime: '2026-08-12T15:00:00Z',
+                teamH: 1,
+                teamA: 2,
+                teamHScore: null,
+                teamAScore: null,
+                finished: false,
+                started: false,
+                teamHDifficulty: 3,
+                teamADifficulty: null,
+              },
+            ],
+          },
+        },
+      },
+      { request: { query: TEAMS_QUERY }, result: { data: { teams: [] } } },
+      {
+        request: { query: EVENTS_QUERY },
+        result: {
+          data: {
+            events: [
+              {
+                id: 1,
+                name: 'Gameweek 1',
+                deadlineTime: null,
+                averageEntryScore: null,
+                finished: false,
+                dataChecked: true,
+                isCurrent: true,
+                isNext: false,
+                isPrevious: false,
+              },
+            ],
+          },
+        },
+      },
+    ];
+
+    renderWithProviders(<FixturesPage />, { mocks, route: '/fixtures' });
+
+    expect(await screen.findByRole('columnheader', { name: 'H Diff' })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'A Diff' })).toBeInTheDocument();
+    // Difficulty 3 renders a chip with the number
+    expect(await screen.findByText('3')).toBeInTheDocument();
+    // Null difficulty renders a dash
+    expect(screen.getAllByText('–').length).toBeGreaterThan(0);
   });
 });
 

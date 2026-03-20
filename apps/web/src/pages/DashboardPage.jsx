@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Box, Card, CardContent, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Link, List, ListItem, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { DASHBOARD_QUERY } from '../lib/queries';
 import { PageState } from '../components/PageState';
@@ -28,6 +28,12 @@ export function DashboardPage() {
   const teams = data?.teams || [];
   const fixtures = data?.fixtures || [];
   const events = data?.events || [];
+  const topScorers = [...players]
+    .sort((a, b) => (b.totalPoints ?? 0) - (a.totalPoints ?? 0))
+    .slice(0, 5);
+  const mostTransferred = [...players]
+    .sort((a, b) => (b.transfersInEvent ?? 0) - (a.transfersInEvent ?? 0))
+    .slice(0, 5);
   const current = events.find((event) => event.isCurrent);
   const upcoming = events.find((event) => event.isNext);
 
@@ -76,6 +82,57 @@ export function DashboardPage() {
             </Typography>
           </CardContent>
         </Card>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 2,
+            mt: 2,
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' },
+          }}
+        >
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6">Top Total Points</Typography>
+              {topScorers.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No data available.
+                </Typography>
+              ) : (
+                <List dense disablePadding>
+                  {topScorers.map((player) => (
+                    <ListItem key={player.id} disableGutters>
+                      <Typography variant="body2">
+                        {player.webName} — {player.totalPoints} pts
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6">Most Transferred In</Typography>
+              {mostTransferred.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No data available.
+                </Typography>
+              ) : (
+                <List dense disablePadding>
+                  {mostTransferred.map((player) => (
+                    <ListItem key={player.id} disableGutters>
+                      <Typography variant="body2">
+                        {player.webName} — {player.transfersInEvent?.toLocaleString() ?? 'N/A'}
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </CardContent>
+          </Card>
+        </Box>
       </PageState>
     </Stack>
   );
