@@ -209,4 +209,26 @@ describe('resolvers', () => {
     });
     expect(ctx.dataSource.listPlayers).not.toHaveBeenCalled();
   });
+
+  it('players query with limit:1000 returns all players when upstream has >500', async () => {
+    // Regression guard: the paginate util previously had a hard cap of 500.
+    // A full FPL season can have 600–800 players; requesting limit:1000 must
+    // return every player, not silently truncate at the old cap.
+    const largeCatalog = Array.from({ length: 600 }, (_v, i) => ({
+      id: i + 1,
+      webName: `Player${i + 1}`,
+      firstName: '',
+      lastName: `Player${i + 1}`,
+      teamId: 1,
+      position: 'MID',
+      totalPoints: 600 - i,
+    }));
+    const ctx = { dataSource: { listPlayers: jest.fn().mockResolvedValue(largeCatalog) } };
+    const result = await resolvers.Query.players(
+      null,
+      { limit: 1000, offset: 0, search: null, teamId: null, position: null },
+      ctx
+    );
+    expect(result).toHaveLength(600);
+  });
 });

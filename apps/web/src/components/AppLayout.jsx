@@ -16,6 +16,7 @@ const navItems = [
   { to: '/players', label: 'Players' },
   { to: '/teams', label: 'Teams' },
   { to: '/fixtures', label: 'Fixtures' },
+  { to: '/fdr', label: 'FDR' },
   { to: '/events', label: 'Gameweeks' },
 ];
 

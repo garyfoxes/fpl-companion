@@ -16,6 +16,7 @@ const PlayersPage = lazy(() =>
   import('./pages/PlayersPage').then((m) => ({ default: m.PlayersPage }))
 );
 const TeamsPage = lazy(() => import('./pages/TeamsPage').then((m) => ({ default: m.TeamsPage })));
+const FdrPage = lazy(() => import('./pages/FdrPage').then((m) => ({ default: m.FdrPage })));
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/fixtures" element={<FixturesPage />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/fdr" element={<FdrPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

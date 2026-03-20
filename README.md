@@ -8,6 +8,7 @@ It provides a GraphQL BFF API and a React frontend for viewing:
 - Teams
 - Fixtures
 - Events / Gameweeks
+- Fixture Difficulty Rating (FDR) matrix
 
 ## Tech Stack
 

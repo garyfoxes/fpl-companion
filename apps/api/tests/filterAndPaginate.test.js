@@ -54,4 +54,11 @@ describe('paginate', () => {
     expect(paged.length).toBe(50);
     expect(paged[0]).toBe(1);
   });
+
+  it('clamps limit at 1000', () => {
+    const items = Array.from({ length: 1200 }, (_v, i) => i + 1);
+    const paged = paginate(items, 9999, 0);
+    expect(paged.length).toBe(1000);
+    expect(paged[0]).toBe(1);
+  });
 });

@@ -5,7 +5,7 @@ function toSafeNumber(value, fallback) {
 
 function paginate(items, limit, offset) {
   const safeOffset = Math.max(toSafeNumber(offset, 0), 0);
-  const safeLimit = Math.min(Math.max(toSafeNumber(limit, 50), 1), 500);
+  const safeLimit = Math.min(Math.max(toSafeNumber(limit, 50), 1), 1000);
   return items.slice(safeOffset, safeOffset + safeLimit);
 }
 

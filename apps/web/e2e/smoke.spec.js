@@ -222,6 +222,8 @@ function responseFor(operationName, variables) {
           event: events.find((event) => event.id === variables.id) || null,
         },
       };
+    case 'FdrFixtures':
+      return { data: { fixtures } };
     default:
       return { data: {} };
   }
@@ -312,4 +314,17 @@ test('player comparison panel shows two players @smoke', async ({ page }) => {
   await expect(page.getByText('Player Comparison')).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'Haaland' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'Saka' })).toBeVisible();
+});
+
+test('fdr page renders heading and window selector @smoke', async ({ page }) => {
+  await page.goto('/fdr');
+  await expect(page.getByRole('heading', { name: /Fixture Difficulty Rating/i })).toBeVisible();
+  await expect(page.getByLabel('Window')).toBeVisible();
+});
+
+test('fdr page window selector updates url @smoke', async ({ page }) => {
+  await page.goto('/fdr');
+  await page.getByLabel('Window').click();
+  await page.getByRole('option', { name: '3' }).click();
+  await expect(page).toHaveURL(/window=3/);
 });
