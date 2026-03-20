@@ -1,5 +1,10 @@
 {
   "servers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp", "--browser", "chromium"]
+    },
     "chrome-devtools": {
       "type": "stdio",
       "command": "${workspaceFolder}/.vscode/start-mcp-chrome.sh",
