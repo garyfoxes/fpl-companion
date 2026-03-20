@@ -34,7 +34,7 @@ const FDR_COLORS = {
 function DifficultyChip({ value }) {
   if (value === null || value === undefined) return <>–</>;
   const bg = FDR_COLORS[value] || '#ebebe4';
-  const dark = value >= 4;
+  const dark = value >= 4 || value <= 1;
   return (
     <Box
       component="span"

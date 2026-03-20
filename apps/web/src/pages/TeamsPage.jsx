@@ -106,10 +106,15 @@ export function TeamsPage() {
             {
               label: 'Played',
               value:
-                detailQuery.data.team.win !== null && detailQuery.data.team.win !== undefined
-                  ? (detailQuery.data.team.win ?? 0) +
-                    (detailQuery.data.team.draw ?? 0) +
-                    (detailQuery.data.team.loss ?? 0)
+                detailQuery.data.team.win !== null &&
+                detailQuery.data.team.win !== undefined &&
+                detailQuery.data.team.draw !== null &&
+                detailQuery.data.team.draw !== undefined &&
+                detailQuery.data.team.loss !== null &&
+                detailQuery.data.team.loss !== undefined
+                  ? detailQuery.data.team.win +
+                    detailQuery.data.team.draw +
+                    detailQuery.data.team.loss
                   : null,
             },
             { label: 'Win', value: detailQuery.data.team.win },

@@ -27,7 +27,14 @@ const baseMocks = [
   {
     request: {
       query: PLAYERS_QUERY,
-      variables: { search: null, teamId: null, position: null, limit: 200, offset: 0 },
+      variables: {
+        search: null,
+        teamId: null,
+        position: null,
+        orderBy: null,
+        limit: 200,
+        offset: 0,
+      },
     },
     result: {
       data: {
