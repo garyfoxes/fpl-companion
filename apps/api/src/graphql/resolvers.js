@@ -71,8 +71,9 @@ const resolvers = {
         );
       }
       try {
-        const results = await Promise.all(ids.map((id) => context.dataSource.getPlayerById(id)));
-        return results.filter(Boolean);
+        const players = await context.dataSource.listPlayers();
+        const idSet = new Set(ids);
+        return players.filter((p) => idSet.has(p.id));
       } catch (error) {
         throw toGraphQLError(error);
       }

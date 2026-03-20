@@ -28,8 +28,12 @@ export function DashboardPage() {
   const teams = data?.teams || [];
   const fixtures = data?.fixtures || [];
   const events = data?.events || [];
-  const topScorers = data?.topScorers || [];
-  const mostTransferred = data?.mostTransferred || [];
+  const topScorers = [...players]
+    .sort((a, b) => (b.totalPoints ?? 0) - (a.totalPoints ?? 0))
+    .slice(0, 5);
+  const mostTransferred = [...players]
+    .sort((a, b) => (b.transfersInEvent ?? 0) - (a.transfersInEvent ?? 0))
+    .slice(0, 5);
   const current = events.find((event) => event.isCurrent);
   const upcoming = events.find((event) => event.isNext);
 
@@ -89,7 +93,7 @@ export function DashboardPage() {
         >
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="h6">Top Scorers this Gameweek</Typography>
+              <Typography variant="h6">Top Total Points</Typography>
               {topScorers.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
                   No data available.

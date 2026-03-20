@@ -21,8 +21,6 @@ const baseMocks = [
         teams: [],
         fixtures: [],
         events: [],
-        topScorers: [],
-        mostTransferred: [],
       },
     },
   },

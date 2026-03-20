@@ -19,15 +19,13 @@ describe('DashboardPage', () => {
         request: { query: DASHBOARD_QUERY },
         result: {
           data: {
-            players: [{ id: 1 }],
+            players: [{ id: 1, webName: 'Haaland', totalPoints: 210, transfersInEvent: 50000 }],
             teams: [{ id: 1, name: 'Man City' }],
             fixtures: [{ id: 1 }],
             events: [
               { id: 1, name: 'Gameweek 1', isCurrent: true, isNext: false },
               { id: 2, name: 'Gameweek 2', isCurrent: false, isNext: true },
             ],
-            topScorers: [{ id: 1, webName: 'Haaland', totalPoints: 210 }],
-            mostTransferred: [{ id: 1, webName: 'Haaland', transfersInEvent: 50000 }],
           },
         },
       },
@@ -38,7 +36,7 @@ describe('DashboardPage', () => {
     expect(await screen.findByText('Current gameweek status')).toBeInTheDocument();
     expect(screen.getByText('Current: Gameweek 1')).toBeInTheDocument();
     expect(screen.getByText('Next: Gameweek 2')).toBeInTheDocument();
-    expect(await screen.findByText('Top Scorers this Gameweek')).toBeInTheDocument();
+    expect(await screen.findByText('Top Total Points')).toBeInTheDocument();
     expect((await screen.findAllByText(/Haaland/)).length).toBeGreaterThan(0);
     expect(await screen.findByText('Most Transferred In')).toBeInTheDocument();
   });

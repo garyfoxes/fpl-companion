@@ -208,7 +208,7 @@ The preview server (`vite preview`) serves the pre-built `apps/web/dist/` as a s
 | Players   | Sortable columns (Total Points, Form, Price); player comparison panel (select up to 3 via checkbox, state in URL `?compare=1,2,3`) |
 | Fixtures  | FDR (Fixture Difficulty Rating) colour chips in H Diff / A Diff columns                                                            |
 | Teams     | Detail panel includes W/D/L, Points, and all six FPL strength ratings                                                              |
-| Dashboard | "Top Scorers this Gameweek" and "Most Transferred In" cards                                                                        |
+| Dashboard | "Top Total Points" and "Most Transferred In" cards                                                                                 |
 
 ## Frontend Architecture
 

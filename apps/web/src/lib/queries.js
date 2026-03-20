@@ -4,6 +4,9 @@ export const DASHBOARD_QUERY = gql`
   query Dashboard {
     players(limit: 1000, offset: 0) {
       id
+      webName
+      totalPoints
+      transfersInEvent
     }
     teams {
       id
@@ -17,20 +20,6 @@ export const DASHBOARD_QUERY = gql`
       name
       isCurrent
       isNext
-    }
-    topScorers: players(orderBy: { field: totalPoints, direction: DESC }, limit: 5, offset: 0) {
-      id
-      webName
-      totalPoints
-    }
-    mostTransferred: players(
-      orderBy: { field: transfersInEvent, direction: DESC }
-      limit: 5
-      offset: 0
-    ) {
-      id
-      webName
-      transfersInEvent
     }
   }
 `;

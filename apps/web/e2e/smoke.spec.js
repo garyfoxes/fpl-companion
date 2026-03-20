@@ -159,8 +159,6 @@ function responseFor(operationName, variables) {
           teams,
           fixtures,
           events,
-          topScorers: [players[0]],
-          mostTransferred: [players[0]],
         },
       };
     case 'Players':
@@ -297,7 +295,7 @@ test('api-down error state @smoke', async ({ page }) => {
 
 test('dashboard gameweek widgets @smoke', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Top Scorers this Gameweek')).toBeVisible();
+  await expect(page.getByText('Top Total Points')).toBeVisible();
   await expect(page.getByText('Most Transferred In')).toBeVisible();
   await expect(page.getByText(/Haaland/).first()).toBeVisible();
 });

@@ -167,11 +167,11 @@ describe('resolvers', () => {
   it('playersByIds returns both players', async () => {
     const ctx = {
       dataSource: {
-        getPlayerById: jest
-          .fn()
-          .mockImplementation((id) =>
-            Promise.resolve(id === 1 ? { id: 1, webName: 'Haaland' } : { id: 2, webName: 'Saka' })
-          ),
+        listPlayers: jest.fn().mockResolvedValue([
+          { id: 1, webName: 'Haaland' },
+          { id: 2, webName: 'Saka' },
+          { id: 3, webName: 'Palmer' },
+        ]),
       },
     };
     const result = await resolvers.Query.playersByIds(null, { ids: [1, 2] }, ctx);
@@ -179,14 +179,10 @@ describe('resolvers', () => {
     expect(result.map((p) => p.id)).toEqual([1, 2]);
   });
 
-  it('playersByIds filters null when an id does not exist', async () => {
+  it('playersByIds filters out ids not in the list', async () => {
     const ctx = {
       dataSource: {
-        getPlayerById: jest
-          .fn()
-          .mockImplementation((id) =>
-            Promise.resolve(id === 1 ? { id: 1, webName: 'Haaland' } : null)
-          ),
+        listPlayers: jest.fn().mockResolvedValue([{ id: 1, webName: 'Haaland' }]),
       },
     };
     const result = await resolvers.Query.playersByIds(null, { ids: [1, 999] }, ctx);
@@ -194,23 +190,23 @@ describe('resolvers', () => {
     expect(result[0].id).toBe(1);
   });
 
-  it('playersByIds de-duplicates ids before fetching', async () => {
+  it('playersByIds de-duplicates ids before filtering', async () => {
     const ctx = {
       dataSource: {
-        getPlayerById: jest.fn().mockResolvedValue({ id: 1, webName: 'Haaland' }),
+        listPlayers: jest.fn().mockResolvedValue([{ id: 1, webName: 'Haaland' }]),
       },
     };
     const result = await resolvers.Query.playersByIds(null, { ids: [1, 1, 1] }, ctx);
-    expect(ctx.dataSource.getPlayerById).toHaveBeenCalledTimes(1);
+    expect(ctx.dataSource.listPlayers).toHaveBeenCalledTimes(1);
     expect(result).toHaveLength(1);
   });
 
   it('playersByIds throws BAD_USER_INPUT when more than 10 ids are provided', async () => {
-    const ctx = { dataSource: { getPlayerById: jest.fn() } };
+    const ctx = { dataSource: { listPlayers: jest.fn() } };
     const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     await expect(resolvers.Query.playersByIds(null, { ids }, ctx)).rejects.toMatchObject({
       extensions: { code: 'BAD_USER_INPUT' },
     });
-    expect(ctx.dataSource.getPlayerById).not.toHaveBeenCalled();
+    expect(ctx.dataSource.listPlayers).not.toHaveBeenCalled();
   });
 });
