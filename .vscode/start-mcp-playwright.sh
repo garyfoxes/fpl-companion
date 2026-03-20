@@ -14,7 +14,11 @@ cd "$REPO_ROOT"
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
   # shellcheck source=/dev/null
   source "$HOME/.nvm/nvm.sh"
-  nvm use --silent
+  if ! nvm use --silent; then
+    echo "ERROR: Failed to activate the Node version from .nvmrc using nvm." >&2
+    echo "Run 'nvm install' from the repo root to install the required version, then retry." >&2
+    exit 1
+  fi
 # Otherwise try fnm (runs regardless of whether node is already on PATH)
 elif command -v fnm &>/dev/null; then
   eval "$(fnm env)"
