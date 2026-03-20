@@ -211,6 +211,20 @@ export const EVENT_QUERY = gql`
   }
 `;
 
+export const FDR_FIXTURES_QUERY = gql`
+  query FdrFixtures {
+    fixtures(finished: false, limit: 400, offset: 0) {
+      id
+      event
+      kickoffTime
+      teamH
+      teamA
+      teamHDifficulty
+      teamADifficulty
+    }
+  }
+`;
+
 export const PLAYERS_BY_IDS_QUERY = gql`
   query PlayersByIds($ids: [Int!]!) {
     playersByIds(ids: $ids) {
