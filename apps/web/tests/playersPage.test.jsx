@@ -179,7 +179,9 @@ describe('PlayersPage', () => {
     await user.click(checkboxes[0]);
     await user.click(checkboxes[1]);
 
-    expect(await screen.findByRole('button', { name: /compare \(2\)/i })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: /clear comparison \(2\)/i })
+    ).toBeInTheDocument();
   });
 
   it('compare panel shows both player names when compare ids are in URL', async () => {

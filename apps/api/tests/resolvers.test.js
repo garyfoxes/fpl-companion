@@ -193,4 +193,24 @@ describe('resolvers', () => {
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe(1);
   });
+
+  it('playersByIds de-duplicates ids before fetching', async () => {
+    const ctx = {
+      dataSource: {
+        getPlayerById: jest.fn().mockResolvedValue({ id: 1, webName: 'Haaland' }),
+      },
+    };
+    const result = await resolvers.Query.playersByIds(null, { ids: [1, 1, 1] }, ctx);
+    expect(ctx.dataSource.getPlayerById).toHaveBeenCalledTimes(1);
+    expect(result).toHaveLength(1);
+  });
+
+  it('playersByIds throws BAD_USER_INPUT when more than 10 ids are provided', async () => {
+    const ctx = { dataSource: { getPlayerById: jest.fn() } };
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    await expect(resolvers.Query.playersByIds(null, { ids }, ctx)).rejects.toMatchObject({
+      extensions: { code: 'BAD_USER_INPUT' },
+    });
+    expect(ctx.dataSource.getPlayerById).not.toHaveBeenCalled();
+  });
 });

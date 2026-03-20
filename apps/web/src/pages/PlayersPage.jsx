@@ -50,10 +50,13 @@ export function PlayersPage() {
     ? searchParams.get('sortField')
     : null;
   const sortDir = searchParams.get('sortDir') || 'DESC';
-  const compareIds = readIntArrayParam(searchParams, 'compare');
 
   const sortDirection = sortDir.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+  const sortDirLower = sortDirection.toLowerCase();
   const orderBy = sortField ? { field: sortField, direction: sortDirection } : null;
+
+  const rawCompareIds = readIntArrayParam(searchParams, 'compare');
+  const compareIds = [...new Set(rawCompareIds)].slice(0, 3);
 
   const { data, loading, error } = useQuery(PLAYERS_QUERY, {
     variables: {
@@ -175,12 +178,8 @@ export function PlayersPage() {
       </Card>
 
       {compareIds.length >= 2 && (
-        <Button
-          variant="outlined"
-          onClick={showComparison ? clearComparison : () => {}}
-          sx={{ alignSelf: 'flex-start' }}
-        >
-          Compare ({compareIds.length})
+        <Button variant="outlined" onClick={clearComparison} sx={{ alignSelf: 'flex-start' }}>
+          Clear comparison ({compareIds.length})
         </Button>
       )}
 
@@ -202,30 +201,28 @@ export function PlayersPage() {
                 <TableCell>Name</TableCell>
                 <TableCell>Position</TableCell>
                 <TableCell>Team</TableCell>
-                <TableCell
-                  sortDirection={sortField === 'totalPoints' ? sortDir.toLowerCase() : false}
-                >
+                <TableCell sortDirection={sortField === 'totalPoints' ? sortDirLower : false}>
                   <TableSortLabel
                     active={sortField === 'totalPoints'}
-                    direction={sortField === 'totalPoints' ? sortDir.toLowerCase() : 'desc'}
+                    direction={sortField === 'totalPoints' ? sortDirLower : 'desc'}
                     onClick={() => handleSortClick('totalPoints')}
                   >
                     Total Points
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sortDirection={sortField === 'form' ? sortDir.toLowerCase() : false}>
+                <TableCell sortDirection={sortField === 'form' ? sortDirLower : false}>
                   <TableSortLabel
                     active={sortField === 'form'}
-                    direction={sortField === 'form' ? sortDir.toLowerCase() : 'desc'}
+                    direction={sortField === 'form' ? sortDirLower : 'desc'}
                     onClick={() => handleSortClick('form')}
                   >
                     Form
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sortDirection={sortField === 'nowCost' ? sortDir.toLowerCase() : false}>
+                <TableCell sortDirection={sortField === 'nowCost' ? sortDirLower : false}>
                   <TableSortLabel
                     active={sortField === 'nowCost'}
-                    direction={sortField === 'nowCost' ? sortDir.toLowerCase() : 'desc'}
+                    direction={sortField === 'nowCost' ? sortDirLower : 'desc'}
                     onClick={() => handleSortClick('nowCost')}
                   >
                     Price

@@ -16,8 +16,10 @@ export function readIntArrayParam(searchParams, key) {
 
   return raw
     .split(',')
-    .map((s) => Number.parseInt(s.trim(), 10))
-    .filter((n) => Number.isFinite(n));
+    .map((s) => s.trim())
+    .filter((s) => /^\d+$/.test(s))
+    .map((s) => Number.parseInt(s, 10))
+    .filter((n) => n > 0);
 }
 
 export function readBooleanParam(searchParams, key) {

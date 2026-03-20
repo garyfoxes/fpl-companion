@@ -4,6 +4,8 @@ const { filterPlayers, filterFixtures } = require('../utils/filter');
 const { paginate } = require('../utils/paginate');
 const { sortTeams, sortPlayers } = require('../utils/sort');
 
+const MAX_PLAYERIDS_PER_QUERY = 10;
+
 const TEAM_ALIAS_FIELDS = {
   short_name: 'shortName',
   strength_overall_home: 'strengthOverallHome',
@@ -61,10 +63,15 @@ const resolvers = {
     },
 
     playersByIds: async (_parent, args, context) => {
-      try {
-        const results = await Promise.all(
-          args.ids.map((id) => context.dataSource.getPlayerById(id))
+      const ids = [...new Set(args.ids)];
+      if (ids.length > MAX_PLAYERIDS_PER_QUERY) {
+        throw new GraphQLError(
+          `playersByIds accepts at most ${MAX_PLAYERIDS_PER_QUERY} IDs per request`,
+          { extensions: { code: 'BAD_USER_INPUT' } }
         );
+      }
+      try {
+        const results = await Promise.all(ids.map((id) => context.dataSource.getPlayerById(id)));
         return results.filter(Boolean);
       } catch (error) {
         throw toGraphQLError(error);
