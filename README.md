@@ -123,7 +123,20 @@ A `RedisCacheAdapter` stub exists for future use, but the MVP uses the in-memory
 
 - Node.js 18.18+ (Node 20 recommended)
 - npm 9+
-- **MCP servers** (optional, for AI agent browser testing — both configured in `.vscode/mcp.json`):
+- **MCP servers** (optional, for AI agent browser testing):
+  - **VS Code / Copilot Agent** reads the repo's `.vscode/mcp.json`.
+  - **Codex CLI / Codex Desktop** reads the repo's `.codex/config.toml`.
+  - For Codex project-scoped MCP config to load, mark this repo as trusted in `~/.codex/config.toml`:
+    ```toml
+    [projects."/absolute/path/to/fpl-companion"]
+    trust_level = "trusted"
+    ```
+    For example:
+    ```toml
+    [projects."/Users/gfox/repos/fpl-companion"]
+    trust_level = "trusted"
+    ```
+  - After trusting the repo, verify Codex sees the MCP servers with `codex mcp list`.
   - **Playwright MCP**: runs via the repo's `.vscode/start-mcp-playwright.sh` wrapper, which activates the `.nvmrc` Node version and then launches `npx -y @playwright/mcp`. No manual install needed; `npx` fetches the package automatically on first use. Node 20.19.0+ required.
   - **Chrome DevTools MCP**: Node 20.19.0+ required. `.nvmrc` pins this version — run `nvm install` or `fnm install` once to activate it.
 
