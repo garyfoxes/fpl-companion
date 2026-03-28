@@ -1,0 +1,10 @@
+[mcp_servers.playwright]
+command = ".vscode/start-mcp-playwright.sh"
+args = ["--browser", "chromium"]
+
+[mcp_servers.chrome-devtools]
+command = ".vscode/start-mcp-chrome.sh"
+args = ["--autoConnect"]
+
+[mcp_servers.chrome-devtools.env]
+CDP_URL = "http://localhost:9222"
