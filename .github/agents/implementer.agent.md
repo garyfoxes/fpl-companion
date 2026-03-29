@@ -24,9 +24,9 @@ Follow the **Branch Policy** in AGENTS.md before making any edits.
 
 Use these skills (under `.github/skills/`) for detailed procedures:
 
-- **graphql-change** — when the task involves adding or modifying GraphQL types, queries, or mutations.
-- **jest-test-writer** — when adding or updating Jest tests (API or Web).
-- **ci-validation** — for the verification sequence and troubleshooting.
+- **graphql-change** (`.github/skills/graphql-change/SKILL.md`) — when the task involves adding or modifying GraphQL types, queries, or mutations.
+- **jest-test-writer** (`.github/skills/jest-test-writer/SKILL.md`) — when adding or updating Jest tests (API or Web).
+- **ci-validation** (`.github/skills/ci-validation/SKILL.md`) — for the verification sequence and troubleshooting.
 
 ## Implementation Behavior
 

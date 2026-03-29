@@ -27,7 +27,7 @@ After `npm run test` passes, verify the output contains **zero** `console.warn` 
 npm run test 2>&1 | grep -c 'console\.\(warn\|error\)$'
 ```
 
-The result must be `0`. If non-zero, see **jest-test-writer SKILL → Test Environment Hygiene** for remediation.
+The result must be `0`. If non-zero, see **jest-test-writer** (`.github/skills/jest-test-writer/SKILL.md`) **→ Test Environment Hygiene** for remediation.
 
 ## CI Parity Notes
 
