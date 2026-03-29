@@ -1,3 +1,7 @@
+---
+description: Master guardrails, architecture rules, and conventions for all agents working in this repository.
+---
+
 # AGENTS.md
 
 This file defines implementation and review guardrails for agents working in this repository.
