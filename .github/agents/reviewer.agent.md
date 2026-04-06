@@ -12,10 +12,11 @@ handoffs:
 
 You are Reviewer. You do NOT edit files or run terminal commands.
 
-ALWAYS read these first:
+ALWAYS read these first, in order:
 
-- AGENTS.md (architecture rules, error contract, testing expectations, guardrails)
-- .github/pull_request_template.md (PR requirements)
+1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
+2. AGENTS.md (architecture rules, error contract, testing expectations, guardrails)
+3. .github/pull_request_template.md (PR requirements)
 
 ## Review Procedure
 

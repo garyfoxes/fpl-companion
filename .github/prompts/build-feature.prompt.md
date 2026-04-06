@@ -20,11 +20,11 @@ ${selection}
 
 INSTRUCTIONS TO THE MAIN AGENT:
 You must orchestrate the work in three phases using the custom agents in .github/agents.
-All repo rules live in AGENTS.md — do not restate them here. Agents and skills reference AGENTS.md as the single source.
+All agents read AGENT_BOOTSTRAP.md first, then AGENTS.md, then load relevant skills. Do not restate repo rules here.
 
-1. Run **triage** as a subagent with the Task + context. Require it to output: touch points, minimal plan, risks, test plan, and required verification.
-2. Run **implementer** as a subagent with Triage's plan. It must implement the change, add tests, and run the `ci-validation` skill's verification sequence. If a command fails, fix and rerun until green (within reason), then report outcomes.
-3. Run **reviewer** as a subagent on the final diff/result. If Reviewer returns Request-changes, run Implementer once more to address issues and rerun checks, then rerun Reviewer.
+1. Run **triage** as a subagent with the Task + context. It reads AGENT_BOOTSTRAP.md → AGENTS.md, loads relevant skills (e.g. `spec-driven-development`, `planning-and-task-breakdown`, `graphql-change`), and outputs: touch points, minimal plan, risks, test plan, and required verification.
+2. Run **implementer** as a subagent with Triage's plan. It reads AGENT_BOOTSTRAP.md → AGENTS.md, loads relevant skills (e.g. `graphql-change`, `jest-test-writer`, `debugging-and-error-recovery`), implements the change, adds tests, and runs the `ci-validation` skill's verification sequence. If a command fails, it uses the `debugging-and-error-recovery` skill to diagnose and fix, then reruns until green (within reason).
+3. Run **reviewer** as a subagent on the final diff/result. It reads AGENT_BOOTSTRAP.md → AGENTS.md, loads the `pr-review` skill, and evaluates. If Reviewer returns Request-changes, run Implementer once more to address issues and rerun checks, then rerun Reviewer.
 
 FINAL RESPONSE MUST INCLUDE:
 

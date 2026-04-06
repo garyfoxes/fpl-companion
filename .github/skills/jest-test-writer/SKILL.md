@@ -5,9 +5,24 @@ description: Patterns and conventions for writing Jest tests in this repo (API +
 
 # Jest Test Writer Skill
 
-Use this skill when adding or updating Jest tests. Refer to **AGENTS.md → Testing Expectations** for required coverage areas — this skill provides the _how_.
+## Overview
 
-## General Conventions
+Patterns and conventions for writing Jest tests in this repo. Covers API (`apps/api/tests/`) and Web (`apps/web/tests/`) workspaces. Refer to **AGENTS.md → Testing Expectations** for required coverage areas — this skill provides the _how_.
+
+## When to Use
+
+- Adding new Jest test files or test cases.
+- Updating existing tests after a code change.
+- Fixing failing tests or test hygiene issues (console noise).
+- The **implementer** agent needs to add test coverage for new or changed code.
+
+## When NOT to Use
+
+- Writing Playwright E2E tests (use `playwright-smoke` skill).
+- Reviewing test coverage without writing tests (use `pr-review` skill).
+- The test is trivial enough that existing test files are sufficient templates.
+
+## Process
 
 - Test files live in the `tests/` directory of each workspace (`apps/api/tests/`, `apps/web/tests/`).
 - Name test files `<subject>.test.js` (API) or `<subject>.test.jsx` (Web).
@@ -112,3 +127,23 @@ npm run test --workspace apps/web
 # Single file
 npx jest --config apps/api/jest.config.cjs apps/api/tests/mappers.test.js
 ```
+
+## Common Rationalizations
+
+- "The component is simple, it doesn't need a loading/error state test" — All data-fetching components need all three state tests. Apollo errors are silent without them.
+- "I'll match mock variables by eye" — Inspect the `useQuery` call directly. A single missing key causes the mock to silently not fire.
+- "Console warnings don't affect test outcomes" — They mask real problems and fail the console noise check in `ci-validation`.
+
+## Red Flags
+
+- Test hangs on `findByText` with no error → almost always a MockedProvider variable mismatch.
+- Blanket `jest.spyOn(console, 'error').mockImplementation(() => {})` without a guard condition.
+- Tests that depend on execution order or shared mutable state between `it` blocks.
+- Missing error-state tests for any component that calls `useQuery`.
+
+## Verification
+
+- [ ] Every new/changed data-fetching component has loading, error, and empty state tests.
+- [ ] Apollo mock variables exactly match the component's `useQuery` call (all keys, including optional ones with `null`).
+- [ ] `npm run test` passes with zero `console.warn`/`console.error` noise.
+- [ ] Test files follow the naming convention: `<subject>.test.js` (API) or `<subject>.test.jsx` (Web).

@@ -5,9 +5,22 @@ description: Structured code-review checklist for this repository, aligned to AG
 
 # PR Review Skill
 
-Use this skill when reviewing code changes. Each section below maps to a guardrail or convention in **AGENTS.md** — refer there for full details rather than restating rules here.
+## Overview
 
-## Review Checklist
+Structured code-review checklist for this repository, aligned to AGENTS.md guardrails. Each section below maps to a guardrail or convention in **AGENTS.md** — refer there for full details rather than restating rules here.
+
+## When to Use
+
+- You are the **reviewer** agent evaluating a diff.
+- You are self-reviewing before submitting a PR.
+- The **build-feature** prompt has reached the review phase.
+
+## When NOT to Use
+
+- Planning or triaging a task (use `spec-driven-development` or `planning-and-task-breakdown`).
+- Implementing changes (use the relevant implementation skills).
+
+## Process
 
 ### 1. Architecture Boundary (AGENTS.md → Architecture Rules)
 
@@ -66,3 +79,27 @@ Structure the review output as:
 3. **Concrete fixes** — actionable bullets
 4. **Test gaps** — missing coverage
 5. **PR readiness** — screenshots needed? risks/rollback notes? PR template sections missing?
+
+## Common Rationalizations
+
+- "The tests pass so the code is correct" — Tests verify behavior under mocked conditions. Review checks architecture, error contract, and edge cases tests may not cover.
+- "It's a small change, full review is overkill" — Small changes can break GraphQL contracts or introduce security issues. Apply the checklist proportionally but don't skip sections.
+- "I'll flag it as Low since it works" — Severity should reflect impact, not current functionality. A missing `extensions.code` is High even if the error path is rarely hit.
+
+## Red Flags
+
+- GraphQL error responses without `extensions.code`.
+- Direct upstream API calls from `apps/web` (bypasses the BFF boundary).
+- Resolver accepting array input without de-duplication and max-length enforcement.
+- "TODO: add tests" in the diff — tests must ship with the change.
+- Apollo mock variable shapes that don't match the component's `useQuery` call.
+- Missing doc updates when the GraphQL surface, env vars, or scripts changed.
+
+## Verification
+
+The review is complete when:
+
+- [ ] All 8 checklist sections have been evaluated.
+- [ ] Every finding has a severity (High/Med/Low) and actionable fix.
+- [ ] The verdict is stated explicitly.
+- [ ] Output follows the 5-section format above.
