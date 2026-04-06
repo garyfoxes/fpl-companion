@@ -9,6 +9,15 @@ description: Break complex tasks into ordered, dependency-aware steps aligned to
 
 Use this skill to decompose a task into an ordered sequence of small, verifiable steps. Each step should be completable independently and testable before moving to the next. This is the operational complement to the `spec-driven-development` skill — spec says _what_, this skill says _in what order_.
 
+Think of this as the "turn intent into execution order" step. A good plan should let another engineer pick up the work without guessing what comes first or how progress will be checked.
+
+## Use With
+
+- `spec-driven-development` — when the task still needs a clear definition before ordering work.
+- `graphql-change` — when API and frontend steps need to be traced in the right sequence.
+- `ci-validation` — as the final verification step in the plan.
+- `security-and-hardening` / `performance-optimization` — when the plan should explicitly call out those risks.
+
 ## When to Use
 
 - The task spans both `apps/api` and `apps/web`.
@@ -23,6 +32,8 @@ Use this skill to decompose a task into an ordered sequence of small, verifiable
 - Pure review or documentation tasks.
 
 ## Process
+
+Start by finding dependency order, then turn that into small steps that can be checked independently.
 
 ### 1. Identify the Dependency Graph
 

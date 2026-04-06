@@ -9,6 +9,15 @@ description: Patterns and conventions for writing and updating Playwright smoke 
 
 Patterns and conventions for writing and updating Playwright smoke tests under `apps/web/e2e/`. All smoke tests run against a fully mocked GraphQL layer — no real API is started. Refer to **AGENTS.md → Testing Expectations** for when smoke tests are required.
 
+Think of this as the "critical route still works" skill. It is intentionally narrower than full end-to-end testing and focuses on user-visible route confidence with mocked data.
+
+## Use With
+
+- `graphql-change` — when a contract change affects rendered data or route behavior.
+- `jest-test-writer` — when route-level smoke coverage should be complemented by component-level tests.
+- `ci-validation` — for the final smoke run.
+- `performance-optimization` — when route loading, query shape, or perceived loading behavior changes.
+
 ## When to Use
 
 - Adding a new page/route to the frontend.
@@ -23,6 +32,8 @@ Patterns and conventions for writing and updating Playwright smoke tests under `
 - The change doesn't add a new route or modify a critical user flow.
 
 ## Process
+
+Follow the single-file smoke test structure below rather than inventing a new test harness.
 
 All smoke tests run against a fully mocked GraphQL layer — no real API is started. The mock is defined in a single file:
 

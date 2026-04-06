@@ -9,6 +9,17 @@ description: End-to-end procedure for adding or modifying a GraphQL type, query,
 
 End-to-end procedure for adding or modifying GraphQL types, queries, or mutations across the full stack. Refer to **AGENTS.md** for the architecture rules, error contract, and guardrails — do not duplicate them here.
 
+Think of this as the "schema to UI" path through the repository. Use it when a change needs to stay coherent all the way from the API contract to the rendered page.
+
+## Use With
+
+- `spec-driven-development` — when the contract is still ambiguous.
+- `planning-and-task-breakdown` — when the change spans enough files that execution order matters.
+- `jest-test-writer` — for resolver, mapper, datasource, and component coverage.
+- `playwright-smoke` — when the change affects routes or critical user-visible flows.
+- `security-and-hardening` — when resolver inputs, boundaries, or dependency/config safety are in scope.
+- `performance-optimization` — when query shape, list behavior, or caching could regress.
+
 ## When to Use
 
 - Adding a new GraphQL type, query, or mutation.
@@ -23,6 +34,8 @@ End-to-end procedure for adding or modifying GraphQL types, queries, or mutation
 - Writing tests for existing GraphQL behavior (use `jest-test-writer` instead).
 
 ## Process
+
+Work top to bottom. If you skip layers, the change is more likely to compile than to actually behave correctly.
 
 Work through these files **in order**. Skip any step that doesn't apply to the change.
 

@@ -9,6 +9,15 @@ description: Systematic approach to diagnosing and fixing failures in this repo'
 
 Use this skill when something fails — a test, a lint rule, a CI step, a runtime error — and the cause is not immediately obvious. This skill provides a structured diagnostic approach specific to this repo's architecture.
 
+Think of this as the "slow down and stop guessing" skill. Its job is to shorten the time between a confusing failure and a verified fix.
+
+## Use With
+
+- `ci-validation` — when the failure appeared during the full verification sequence.
+- `jest-test-writer` — when the issue is rooted in mock shape or test hygiene.
+- `playwright-smoke` — when the issue is in route behavior or mocked GraphQL smoke coverage.
+- `graphql-change` — when the failure sits at schema, resolver, mapper, or query boundaries.
+
 ## When to Use
 
 - A CI validation step fails and the fix is not obvious from the error message.
@@ -24,6 +33,8 @@ Use this skill when something fails — a test, a lint rule, a CI step, a runtim
 - The issue is a code review finding, not a runtime or build error.
 
 ## Process
+
+Move in order: read the error, classify it, isolate it, fix it, verify it.
 
 ### 1. Read the Error — Fully
 
