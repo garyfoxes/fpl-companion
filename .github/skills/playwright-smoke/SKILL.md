@@ -5,10 +5,24 @@ description: Patterns and conventions for writing and updating Playwright smoke 
 
 # Playwright Smoke Skill
 
-Use this skill when adding, updating, or debugging Playwright smoke tests under `apps/web/e2e/`.
-Refer to **AGENTS.md → Testing Expectations** for when smoke tests are required.
+## Overview
 
-## Architecture Overview
+Patterns and conventions for writing and updating Playwright smoke tests under `apps/web/e2e/`. All smoke tests run against a fully mocked GraphQL layer — no real API is started. Refer to **AGENTS.md → Testing Expectations** for when smoke tests are required.
+
+## When to Use
+
+- Adding a new page/route to the frontend.
+- Adding a new GraphQL query consumed by an existing page.
+- Changing the GraphQL schema in a way that affects rendered data.
+- The **triage** agent identified Playwright smoke updates in the test plan.
+
+## When NOT to Use
+
+- API-only changes with no frontend impact.
+- Adding Jest unit/component tests (use `jest-test-writer` skill).
+- The change doesn't add a new route or modify a critical user flow.
+
+## Process
 
 All smoke tests run against a fully mocked GraphQL layer — no real API is started. The mock is defined in a single file:
 
@@ -143,3 +157,24 @@ npx playwright test --config apps/web/playwright.config.js --headed
 ```
 
 Run against the production build (`npm run preview`, port 4173), not the dev server — see `playwright.config.js` for the configured base URL.
+
+## Common Rationalizations
+
+- "The existing page tests still pass, so adding the new query's mock case can wait" — The test passes because the query silently returns `{ data: {} }`. The new feature is untested.
+- "I'll use `data-testid` for this one element" — Prefer role/label selectors. Test IDs couple tests to implementation.
+- "I'll add a per-route API-down test for thoroughness" — One global test already covers this. Duplicates increase maintenance without coverage gain.
+
+## Red Flags
+
+- Fixture objects that don't include every field from the corresponding GraphQL query document.
+- A new `case` in `responseFor` with no corresponding test assertions.
+- Tests that don't tag `@smoke` in the name — CI filters on this tag.
+- Smoke tests that depend on the dev server instead of the production build.
+
+## Verification
+
+- [ ] Every new page has at minimum a list render test and a detail view test.
+- [ ] Every new GraphQL query has a matching `case` in `responseFor`.
+- [ ] Fixture objects include all fields from the query document in `apps/web/src/lib/queries.js`.
+- [ ] All tests include `@smoke` in the test name.
+- [ ] `npm run test:e2e:smoke` passes.

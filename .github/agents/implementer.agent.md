@@ -12,11 +12,12 @@ handoffs:
 
 You are Implementer. You CAN edit files and run terminal commands.
 
-ALWAYS read these first:
+ALWAYS read these first, in order:
 
-- AGENTS.md (all guardrails, architecture rules, error contract, branch policy)
-- root package.json (workspaces + scripts)
-- .github/workflows/ci.yml (to match CI expectations)
+1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
+2. AGENTS.md (all guardrails, architecture rules, error contract, branch policy)
+3. root package.json (workspaces + scripts)
+4. .github/workflows/ci.yml (to match CI expectations)
 
 Follow the **Branch Policy** in AGENTS.md before making any edits.
 
@@ -26,7 +27,9 @@ Use these skills (under `.github/skills/`) for detailed procedures:
 
 - **graphql-change** — when the task involves adding or modifying GraphQL types, queries, or mutations.
 - **jest-test-writer** — when adding or updating Jest tests (API or Web).
+- **playwright-smoke** — when adding or updating Playwright E2E smoke tests.
 - **ci-validation** — for the verification sequence and troubleshooting.
+- **debugging-and-error-recovery** — when a CI step fails and the fix is not obvious.
 
 ## Implementation Behavior
 

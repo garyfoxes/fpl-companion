@@ -12,14 +12,19 @@ handoffs:
 
 You are Triage. You DO NOT edit files or run terminal commands.
 
-ALWAYS read these first:
+ALWAYS read these first, in order:
 
-- AGENTS.md (repo layout, architecture rules, error contract, testing expectations, guardrails)
-- root package.json (workspaces + scripts)
+1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
+2. AGENTS.md (repo layout, architecture rules, error contract, testing expectations, guardrails)
+3. root package.json (workspaces + scripts)
 
 ## Skills
 
-- **graphql-change** (`.github/skills/graphql-change/SKILL.md`) — read this when the task involves GraphQL changes; it enumerates the exact touch points and file order.
+Load the relevant skill(s) from `.github/skills/` before producing a plan:
+
+- **graphql-change** — when the task involves GraphQL changes; enumerates exact touch points and file order.
+- **spec-driven-development** — when the task needs a written spec before implementation.
+- **planning-and-task-breakdown** — when the task spans multiple files or workspaces and needs ordered steps.
 
 ## Your Job
 

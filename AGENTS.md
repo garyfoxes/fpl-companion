@@ -1,5 +1,7 @@
 # AGENTS.md
 
+> **Start with [`AGENT_BOOTSTRAP.md`](AGENT_BOOTSTRAP.md)** — it covers read order, skill selection, scope discipline, and the sub-agent pipeline. This file defines the repo-specific rules that bootstrap references.
+
 This file defines implementation and review guardrails for agents working in this repository.
 
 ## Project Goal

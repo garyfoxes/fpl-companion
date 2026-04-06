@@ -5,10 +5,24 @@ description: End-to-end procedure for adding or modifying a GraphQL type, query,
 
 # GraphQL Change Skill
 
-Use this skill whenever a task adds, modifies, or removes GraphQL types, queries, or mutations.
-Refer to **AGENTS.md** for the architecture rules, error contract, and guardrails — do not duplicate them here.
+## Overview
 
-## Touch-Point Checklist
+End-to-end procedure for adding or modifying GraphQL types, queries, or mutations across the full stack. Refer to **AGENTS.md** for the architecture rules, error contract, and guardrails — do not duplicate them here.
+
+## When to Use
+
+- Adding a new GraphQL type, query, or mutation.
+- Modifying an existing type's fields, arguments, or return shape.
+- Adding a new upstream entity that needs schema-through-frontend wiring.
+- The **triage** agent identified GraphQL touch points in the plan.
+
+## When NOT to Use
+
+- Frontend-only changes that consume existing queries without modifying them.
+- API changes that don't touch the GraphQL schema (e.g. cache tuning, config).
+- Writing tests for existing GraphQL behavior (use `jest-test-writer` instead).
+
+## Process
 
 Work through these files **in order**. Skip any step that doesn't apply to the change.
 
@@ -143,3 +157,26 @@ All GraphQL errors must use `extensions.code`. Upstream mapping:
 | Invalid payload                   | `BAD_UPSTREAM_RESPONSE` |
 
 Details live in the **GraphQL And Error Contract** section of AGENTS.md.
+
+## Common Rationalizations
+
+- "I'll add the frontend later" — If the schema change is user-facing, the query document and component update should ship together.
+- "The mapper is trivial, I'll skip the test" — Mapper tests catch upstream payload drift. Always test normalization and null handling.
+- "I don't need to update the entity descriptor for this" — If you're adding a new entity, missing the descriptor causes runtime failures that only appear on first fetch.
+
+## Red Flags
+
+- Schema field added but no resolver wired → GraphQL returns `null` silently.
+- Resolver calls datasource without error mapping → unhandled upstream errors leak raw messages.
+- New query variable added but existing Apollo mocks not updated → Jest tests hang (see `jest-test-writer` skill).
+- Playwright fixture objects missing new fields → smoke tests pass but don't cover the new data.
+
+## Verification
+
+- [ ] Schema, resolver, datasource, mapper, query document, and component are consistent.
+- [ ] Every new error path includes `extensions.code`.
+- [ ] Jest tests cover happy path + error codes.
+- [ ] Mapper tests cover normalization + null/missing fields.
+- [ ] Playwright smoke test updated if a new route or query was added.
+- [ ] `README.md` GraphQL Query Surface updated if the public API changed.
+- [ ] Full `ci-validation` sequence passes.

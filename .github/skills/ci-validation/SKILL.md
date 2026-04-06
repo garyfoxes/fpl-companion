@@ -5,10 +5,24 @@ description: The four-command verification sequence that must pass before submit
 
 # CI Validation Skill
 
-Use this skill to validate changes before committing or submitting a PR.
-The required checks are defined in **AGENTS.md → Testing Expectations**; this skill provides execution details and troubleshooting.
+## Overview
 
-## Verification Sequence
+The four-command verification sequence that must pass before committing or submitting a PR. The required checks are defined in **AGENTS.md → Testing Expectations**; this skill provides execution details and troubleshooting.
+
+## When to Use
+
+- Before every commit or PR submission.
+- After the **implementer** agent finishes code changes.
+- When the **reviewer** agent flags missing verification evidence.
+- When iterating on a fix and you need to confirm the full suite is green.
+
+## When NOT to Use
+
+- Mid-development iteration on a single file — use the Quick Iteration commands below instead, then run the full sequence at the end.
+
+## Process
+
+### Verification Sequence
 
 Run these commands **in order** from the repo root. All must pass.
 
@@ -61,3 +75,25 @@ npx playwright test --headed --config apps/web/playwright.config.js
 ```
 
 Always run the **full sequence** before the final commit.
+
+## Common Rationalizations
+
+- "Tests pass locally so I'll skip format/lint" — CI runs all four steps; a format or lint failure blocks merge.
+- "Playwright is slow, I'll skip it for this change" — Smoke tests catch regressions invisible to Jest (routing, API-down UX, full render).
+- "Console warnings are just noise" — Unaddressed warnings mask real errors. See `jest-test-writer` skill for remediation.
+
+## Red Flags
+
+- Running only a subset of the sequence and declaring work complete.
+- Piping test output through `tail` or `grep` in a way that hides warnings.
+- Skipping the console noise check after `npm run test`.
+- Tests pass but you haven't verified the specific behavior your change affects.
+
+## Verification
+
+All of the following must be true:
+
+- [ ] `npm run format` exits 0.
+- [ ] `npm run lint` exits 0.
+- [ ] `npm run test` exits 0 with zero `console.warn`/`console.error` noise.
+- [ ] `npm run test:e2e:smoke` exits 0.

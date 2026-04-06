@@ -25,8 +25,12 @@ fpl-companion/
     api/
     web/
   .github/
+    agents/          # Sub-agent definitions (triage, implementer, reviewer)
+    prompts/         # Reusable prompt templates (build-feature)
+    skills/          # Task-specific procedural skills
     workflows/ci.yml
-  AGENTS.md
+  AGENT_BOOTSTRAP.md # Meta-instructions for AI agents (read first)
+  AGENTS.md          # Repo-specific guardrails and architecture rules
   README.md
 ```
 
@@ -294,3 +298,16 @@ What to do:
 1. Verify upstream payload shape has required fields.
 2. Check API logs for dropped invalid records.
 3. Validate filters in URL query params.
+
+## AI Agent Setup
+
+This repo is configured for AI-assisted development with GitHub Copilot and OpenAI Codex.
+
+### How It Works
+
+Two root files define agent behavior:
+
+- **`AGENT_BOOTSTRAP.md`** — Meta-instructions that agents read first. Covers read order, skill selection, scope discipline, and the sub-agent pipeline. This is the entry point for any agent session.
+- **`AGENTS.md`** — Repo-specific architecture rules, guardrails, error contract, branch policy, and testing expectations. This is the authoritative source for all repo conventions.
+
+Three sub-agents (triage → implementer → reviewer) handle planning, implementation, and review. The `build-feature` prompt (`.github/prompts/build-feature.prompt.md`) orchestrates all three phases automatically. Eight procedural skills under `.github/skills/` cover the full lifecycle — from spec writing through CI validation and debugging. See `AGENT_BOOTSTRAP.md` for the complete pipeline and skill selection guide.
