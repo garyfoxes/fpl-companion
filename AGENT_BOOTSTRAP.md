@@ -22,8 +22,18 @@ Do not skip steps 1–2. Skills are optional per-task but should be loaded when 
 | Clarifying scope or writing a spec | `spec-driven-development`      |
 | Breaking a task into steps         | `planning-and-task-breakdown`  |
 | Diagnosing failures or errors      | `debugging-and-error-recovery` |
+| Security-sensitive changes         | `security-and-hardening`       |
+| Performance-sensitive changes      | `performance-optimization`     |
 
 If multiple skills apply, load them all. Skills reference AGENTS.md rather than restating rules — loading both is safe.
+
+Common pairings in this repo:
+
+- `graphql-change` + `jest-test-writer`
+- `graphql-change` + `performance-optimization`
+- `graphql-change` + `security-and-hardening`
+- `pr-review` + `security-and-hardening` for boundary-sensitive changes
+- `pr-review` + `performance-optimization` for query, loading, or bundle-sensitive changes
 
 ## When to Plan Before Coding
 

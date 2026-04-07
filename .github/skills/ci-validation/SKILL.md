@@ -9,6 +9,15 @@ description: The four-command verification sequence that must pass before submit
 
 The four-command verification sequence that must pass before committing or submitting a PR. The required checks are defined in **AGENTS.md → Testing Expectations**; this skill provides execution details and troubleshooting.
 
+Think of this as the "ready to hand off" skill. It is the final proof that the change is in shape for review, not just that one command happened to pass locally.
+
+## Use With
+
+- `debugging-and-error-recovery` — when one of the validation steps fails and the fix is not obvious.
+- `jest-test-writer` — when the console-noise check fails or coverage work is still in flight.
+- `playwright-smoke` — when the failing step is route-level smoke coverage.
+- `pr-review` — when the reviewer needs to assess whether verification is complete.
+
 ## When to Use
 
 - Before every commit or PR submission.
@@ -21,6 +30,8 @@ The four-command verification sequence that must pass before committing or submi
 - Mid-development iteration on a single file — use the Quick Iteration commands below instead, then run the full sequence at the end.
 
 ## Process
+
+Run the sequence in order. A green later step does not excuse a skipped earlier one.
 
 ### Verification Sequence
 

@@ -9,6 +9,15 @@ description: Patterns and conventions for writing Jest tests in this repo (API +
 
 Patterns and conventions for writing Jest tests in this repo. Covers API (`apps/api/tests/`) and Web (`apps/web/tests/`) workspaces. Refer to **AGENTS.md → Testing Expectations** for required coverage areas — this skill provides the _how_.
 
+Think of this as the "prove the change in the right layer" skill. It should help you decide what to test, how to structure the test, and how to avoid fragile or noisy test runs.
+
+## Use With
+
+- `graphql-change` — for resolver, mapper, datasource, and component test coverage.
+- `ci-validation` — for the final verification sequence and console-noise expectations.
+- `debugging-and-error-recovery` — when a test fails or hangs and the cause is not obvious.
+- `pr-review` — when evaluating whether coverage is adequate after the implementation is done.
+
 ## When to Use
 
 - Adding new Jest test files or test cases.
@@ -23,6 +32,8 @@ Patterns and conventions for writing Jest tests in this repo. Covers API (`apps/
 - The test is trivial enough that existing test files are sufficient templates.
 
 ## Process
+
+Start with the correct test layer, then use the repo-specific patterns below.
 
 - Test files live in the `tests/` directory of each workspace (`apps/api/tests/`, `apps/web/tests/`).
 - Name test files `<subject>.test.js` (API) or `<subject>.test.jsx` (Web).

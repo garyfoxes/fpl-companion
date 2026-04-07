@@ -9,6 +9,15 @@ description: Write a lightweight spec before implementing non-trivial changes, a
 
 Use this skill to produce a short written spec before writing code. A spec captures what will change, why, and what "done" looks like — reducing wasted implementation cycles and clarifying scope across the triage → implementer → reviewer pipeline.
 
+Think of this as the "make the task concrete" step. The output should be short enough to scan quickly and specific enough that the implementer and reviewer can work from the same shared intent.
+
+## Use With
+
+- `planning-and-task-breakdown` — after the spec is clear and the work needs ordering.
+- `graphql-change` — when the spec changes schema, resolver, mapper, or query behavior.
+- `security-and-hardening` — when the task changes boundaries, config, or dependency surface.
+- `performance-optimization` — when the task changes query shape, loading paths, or cache behavior.
+
 ## When to Use
 
 - The task adds or changes a GraphQL type, query, or mutation.
@@ -24,6 +33,8 @@ Use this skill to produce a short written spec before writing code. A spec captu
 - Documentation-only changes.
 
 ## Process
+
+Work from context to scope to verification. The goal is not a long design doc; it is a reliable handoff.
 
 ### 1. Gather Context
 
