@@ -24,13 +24,13 @@ fpl-companion/
   apps/
     api/
     web/
+  .agents/
+    skills/            # Shared reusable procedural skills
   .github/
-    agents/          # Sub-agent definitions (triage, implementer, reviewer)
-    prompts/         # Reusable prompt templates (build-feature)
-    skills/          # Task-specific procedural skills
+    agents/            # Copilot agent personas (triage, implementer, reviewer)
+    prompts/           # Copilot reusable prompt templates (build-feature)
     workflows/ci.yml
-  AGENT_BOOTSTRAP.md # Meta-instructions for AI agents (read first)
-  AGENTS.md          # Repo-specific guardrails and architecture rules
+  AGENTS.md            # Primary always-on instruction file for AI agents
   README.md
 ```
 
@@ -305,9 +305,9 @@ This repo is configured for AI-assisted development with GitHub Copilot and Open
 
 ### How It Works
 
-Two root files define agent behavior:
+- **`AGENTS.md`** — The primary, always-on instruction file for all AI agents. Contains repo-wide architecture rules, guardrails, coding conventions, testing expectations, branch policy, skill selection, and the sub-agent pipeline definition. Agents read this file first.
+- **`.agents/skills/`** — Shared reusable procedural skills covering the development lifecycle (spec writing, planning, GraphQL changes, Jest tests, Playwright smoke tests, CI validation, debugging, code review, security, performance).
+- **`.github/agents/`** — Copilot agent persona definitions for the triage → implementer → reviewer pipeline.
+- **`.github/prompts/`** — Copilot reusable prompt templates (e.g. `build-feature.prompt.md`).
 
-- **`AGENT_BOOTSTRAP.md`** — Meta-instructions that agents read first. Covers read order, skill selection, scope discipline, and the sub-agent pipeline. This is the entry point for any agent session.
-- **`AGENTS.md`** — Repo-specific architecture rules, guardrails, error contract, branch policy, and testing expectations. This is the authoritative source for all repo conventions.
-
-Three sub-agents (triage → implementer → reviewer) handle planning, implementation, and review. The `build-feature` prompt (`.github/prompts/build-feature.prompt.md`) launches that workflow and should start from `AGENT_BOOTSTRAP.md` as the entry point. Ten procedural skills under `.github/skills/` cover the lifecycle — from spec writing through CI validation, review, debugging, security, and performance. See `AGENT_BOOTSTRAP.md` for the complete pipeline and skill selection guide.
+Three sub-agents (triage → implementer → reviewer) handle planning, implementation, and review. The `build-feature` prompt (`.github/prompts/build-feature.prompt.md`) launches that workflow. Ten procedural skills under `.agents/skills/` cover the lifecycle — from spec writing through CI validation, review, debugging, security, and performance. See `AGENTS.md` for the complete pipeline and skill selection guide.

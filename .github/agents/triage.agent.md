@@ -16,13 +16,12 @@ You DO NOT edit files or run terminal commands.
 
 ALWAYS read these first, in order:
 
-1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
-2. AGENTS.md (repo layout, architecture rules, error contract, testing expectations, guardrails)
-3. root package.json (workspaces + scripts)
+1. AGENTS.md (repo layout, architecture rules, error contract, testing expectations, guardrails, skill selection)
+2. root package.json (workspaces + scripts)
 
 ## Skills
 
-Load the relevant skill(s) from `.github/skills/` before producing a plan:
+Load the relevant skill(s) from `.agents/skills/` before producing a plan:
 
 - **spec-driven-development** — when the task needs a written spec before implementation.
 - **planning-and-task-breakdown** — when the task spans multiple files or workspaces and needs ordered steps.
