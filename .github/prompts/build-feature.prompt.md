@@ -1,5 +1,5 @@
 ---
-description: Start from AGENT_BOOTSTRAP.md, then orchestrate triage → implement → review using repo agents and skills.
+description: Start from AGENTS.md, then orchestrate triage → implement → review using repo agents and skills.
 agent: 'agent'
 model: Claude Sonnet 4.6
 tools: ['agent', 'read', 'search', 'edit', 'read/terminalLastCommand', 'search/usages']
@@ -23,24 +23,23 @@ You are launching the repo workflow, not redefining it.
 
 Use this read model:
 
-1. `AGENT_BOOTSTRAP.md` is the entry point and should be treated as the first-read file.
-2. `AGENTS.md` is the authoritative source for repo rules, architecture, and guardrails.
-3. `.github/skills/` contains the procedural playbooks that agents load per task.
-4. `.github/agents/` contains the role wrappers for triage, implementation, and review.
+1. `AGENTS.md` is the entry point and the authoritative source for repo rules, architecture, guardrails, and skill selection.
+2. `.agents/skills/` contains the procedural playbooks that agents load per task.
+3. `.github/agents/` contains the role wrappers for triage, implementation, and review.
 
 Do not restate repo rules here. Use the existing agents and skills as designed.
 
 You must orchestrate the work in three phases using the custom agents in `.github/agents`.
 
 1. Run **triage** as a subagent with the Task + context.
-   It should read `AGENT_BOOTSTRAP.md` first, then `AGENTS.md`, then load the relevant planning skills.
+   It should read `AGENTS.md` first, then load the relevant planning skills.
    It should output: touch points, minimal plan, risks, test plan, and required verification.
 2. Run **implementer** as a subagent with Triage's plan.
-   It should read `AGENT_BOOTSTRAP.md` first, then `AGENTS.md`, then load the relevant implementation skills.
+   It should read `AGENTS.md` first, then load the relevant implementation skills.
    It must implement the change, add tests, and run the `ci-validation` verification sequence.
    If a command fails, it should use `debugging-and-error-recovery`, fix the issue, and rerun within reason.
 3. Run **reviewer** as a subagent on the final diff/result.
-   It should read `AGENT_BOOTSTRAP.md` first, then `AGENTS.md`, then load `pr-review` plus any deeper review skills it needs.
+   It should read `AGENTS.md` first, then load `pr-review` plus any deeper review skills it needs.
    If Reviewer returns `Request-changes`, run Implementer once more to address issues and rerun checks, then rerun Reviewer.
 
 FINAL RESPONSE MUST INCLUDE:

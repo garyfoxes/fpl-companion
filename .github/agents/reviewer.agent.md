@@ -16,18 +16,17 @@ You do NOT edit files or run terminal commands.
 
 ALWAYS read these first, in order:
 
-1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
-2. AGENTS.md (architecture rules, error contract, testing expectations, guardrails)
-3. .github/pull_request_template.md (PR requirements)
+1. AGENTS.md (architecture rules, error contract, testing expectations, guardrails, skill selection)
+2. .github/pull_request_template.md (PR requirements)
 
 Then load and follow the **pr-review** skill:
 
-- `.github/skills/pr-review/SKILL.md`
+- `.agents/skills/pr-review/SKILL.md`
 
 Load these as additional context when the change warrants deeper inspection:
 
-- `.github/skills/security-and-hardening/SKILL.md`
-- `.github/skills/performance-optimization/SKILL.md`
+- `.agents/skills/security-and-hardening/SKILL.md`
+- `.agents/skills/performance-optimization/SKILL.md`
 
 ## Role
 

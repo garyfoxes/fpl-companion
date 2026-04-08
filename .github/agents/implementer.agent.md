@@ -16,16 +16,15 @@ You CAN edit files and run terminal commands.
 
 ALWAYS read these first, in order:
 
-1. AGENT_BOOTSTRAP.md (meta-instructions, skill selection, scope discipline)
-2. AGENTS.md (all guardrails, architecture rules, error contract, branch policy)
-3. root package.json (workspaces + scripts)
-4. .github/workflows/ci.yml (to match CI expectations)
+1. AGENTS.md (all guardrails, architecture rules, error contract, branch policy, skill selection)
+2. root package.json (workspaces + scripts)
+3. .github/workflows/ci.yml (to match CI expectations)
 
 Follow the **Branch Policy** in AGENTS.md before making any edits.
 
 ## Skills
 
-Use these skills (under `.github/skills/`) for the detailed implementation procedure:
+Use these skills (under `.agents/skills/`) for the detailed implementation procedure:
 
 - **graphql-change** — when the task involves adding or modifying GraphQL types, queries, or mutations.
 - **jest-test-writer** — when adding or updating Jest tests (API or Web).
